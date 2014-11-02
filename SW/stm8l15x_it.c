@@ -24,7 +24,19 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm8l15x.h"
 #include "stm8l15x_it.h"
+#include <stm8l15x_conf.h>
+#include "stm8l_discovery_lcd.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include <user_typedef.h>
+#include <settings.h>
+#include <adc_app.h>
+#include <config_mcu.h>
+#include <delay.h>
+
+extern char ad_value_in_string[7];
 
 /** @addtogroup STM8L15x_StdPeriph_Examples
   * @{
@@ -273,11 +285,71 @@ INTERRUPT_HANDLER(SWITCH_CSS_BREAK_DAC_IRQHandler, 17)
   * @param  None
   * @retval None
   */
+
+
+extern main_struct_t main_structure;
+
 INTERRUPT_HANDLER(ADC1_COMP_IRQHandler, 18)
 {
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+  
+  if(main_structure.adc_state == ADC_CH1)
+  {
+    main_structure.adc_value1 = ADC_GetConversionValue(ADC1);
+  };
+  
+  if(main_structure.adc_state == ADC_CH2)
+  {
+    main_structure.adc_value2 = ADC_GetConversionValue(ADC1);
+  };
+  adc_off();
+  
+//  main_structure.adc_calc+=ADC_GetConversionValue(ADC1);
+//  main_structure.indx++;
+ 
+  //////////////////////////////////////////////////////////////////////////////
+//  if (
+//    if (main_structure.indx >= ADC_INDEX)
+//    {
+//      main_structure.adc_calc/=main_structure.indx;
+//      main_structure.adc_value1 = main_structure.adc_calc;
+//      main_structure.indx = 0;
+//      main_structure.adc_calc = 0;
+//      
+//    }
+//    else 
+//    {
+//      ADC_SoftwareStartConv(ADC1);
+//    };
+//    
+ ////////////////////////////////////////////////////////////////////////////////// 
+  
+////  if (main_structure.adc_state == ADC_CH2)
+////  {
+//        
+//    if (main_structure.indx >= ADC_INDEX)
+//    {
+//      main_structure.adc_calc/=main_structure.indx;
+//      main_structure.adc_value2 = main_structure.adc_calc;
+//      main_structure.indx = 0;
+//      main_structure.adc_calc = 0;
+//      adc_off();
+//      
+////     sprintf(main_structure.adc_value_string,"%d",main_structure.adc_value); 
+////     main_structure.adc_state = ADC_COMPLIT; 
+////      //itoa(main_structure.adc_value,main_structure.adc_value_string,10);
+//      
+//    }
+//    else 
+//    {
+//      ADC_SoftwareStartConv(ADC1);
+//    };
+//    
+//  };
+  
+   
 }
 
 /**
@@ -302,6 +374,39 @@ INTERRUPT_HANDLER(TIM2_CC_USART2_RX_IRQHandler, 20)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+  /////////////////////////////////////////////////////////////////////////////
+  
+    delay_1us(10);
+    GPIO_WriteBit(GPIOE,GPIO_Pin_7,SET);
+    TIM2_ClearFlag(TIM2_FLAG_CC1);
+    ADC_ChannelCmd(ADC1,ADC_Channel_4,DISABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_3,ENABLE);
+    ADC_SoftwareStartConv(ADC1);
+    while (ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)== RESET);
+    main_structure.adc_value1 = ADC_GetConversionValue(ADC1);
+    GPIO_WriteBit(GPIOE,GPIO_Pin_7,RESET);
+  ////////////////////////////////////////////////////////////////////////////// 
+    delay_1us(150);
+    GPIO_WriteBit(GPIOE,GPIO_Pin_7,SET);
+    ADC_ChannelCmd(ADC1,ADC_Channel_3,DISABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_4,ENABLE);
+    ADC_SoftwareStartConv(ADC1);
+    while (ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)== RESET);
+    main_structure.adc_value2 = ADC_GetConversionValue(ADC1);
+    GPIO_WriteBit(GPIOE,GPIO_Pin_7,RESET);
+ ////////////////////////////////////////////////////////////////////////////////    
+    main_structure.adc_calc2 = main_structure.adc_value1 +  main_structure.adc_value2;
+    main_structure.adc_calc2 /=2;
+    if(main_structure.adc_calc2 > 2650)
+    {
+      main_structure.adc_calc2 = main_structure.adc_calc2 - 2650 ;
+    }
+    else
+    {
+      main_structure.adc_calc2=0;
+    };
+      
+   
 }
 
 
@@ -326,6 +431,11 @@ INTERRUPT_HANDLER(TIM3_CC_USART3_RX_IRQHandler, 22)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+    sprintf(main_structure.adc_value_string,"%u",main_structure.adc_calc2);
+      LCD_GLASS_DisplayString((uint8_t*)main_structure.adc_value_string);
+      TIM3_ClearFlag(TIM3_FLAG_CC1);
+      TIM3_ClearFlag(TIM3_FLAG_CC2);
+  
 }
 /**
   * @brief TIM1 Update/Overflow/Trigger/Commutation Interrupt routine.
@@ -360,6 +470,11 @@ INTERRUPT_HANDLER(TIM4_UPD_OVF_TRG_IRQHandler, 25)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+  
+//  TIM4->CNTR = 0x00;
+//  //adc_start();
+//  TIM4_ClearFlag(TIM4_FLAG_Update);
+//  
 }
 /**
   * @brief SPI1 Interrupt routine.

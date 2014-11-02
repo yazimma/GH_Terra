@@ -25,7 +25,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm8l15x.h"
 #include <config_mcu.h>
-
+#include "stm8l_discovery_lcd.h"
+#include <stm8l15x_it.h>
+#include <user_typedef.h>
+#include <stdio.h>
+#include <delay.h>
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -34,6 +38,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+    main_struct_t main_structure;
 /* Private function prototypes -----------------------------------------------*/
 
 /* Private functions ---------------------------------------------------------*/
@@ -43,13 +48,35 @@
   * @param  None
   * @retval None
   */
+//char ad_value_in_string[7]={"terra"};
 void main(void)
 {
- clock_config();
+  
+  
+  clock_config();
+  tim4_config();
+  tim2_on();
+  tim3_on();
+  adc_init();
+ LCD_GLASS_Init();
+ config_ports();
+ enableInterrupts();
  
+  //LCD_GLASS_DisplayString((uint8_t*)ad_value_in_string);
   /* Infinite loop */
   while (1)
   {
+//    //main_structure.indx++;
+//    
+//    for(uint16_t c=20000;c!=0;c--){};
+//    asm("NOP");
+//     // disableInterrupts();
+//      sprintf(main_structure.adc_value_string,"%u",main_structure.adc_calc2);
+//      LCD_GLASS_DisplayString((uint8_t*)main_structure.adc_value_string);
+//      main_structure.indx = 0;
+     // enableInterrupts();
+   // };  
+    
   }
 }
 

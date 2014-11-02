@@ -482,7 +482,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state></state>
+          <state>Gh_terra_test_measurment_metod.srec</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -1659,16 +1659,28 @@
     </file>
   </group>
   <file>
+    <name>$PROJ_DIR$\adc_app.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\config_mcu.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\delay.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\settings.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\stm8l15x_conf.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\stm8l15x_it.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\stm8l_discovery_lcd.c</name>
   </file>
 </project>
 

@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1609765396
+Checksum=2096016119
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -51,14 +51,13 @@ ActionState=1
 [Trace1]
 Enabled=0
 ShowSource=1
+[struct_types]
+Fmt0=main_struct_t-indx	3	0
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\config_mcu.c}.28.2" 1 0 0 0 "" 0 ""
-Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -66,6 +65,9 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "0x008420" 0 0 0 0 "" 0 ""
+Count=1
 [Aliases]
 Count=0
 SuppressDialog=0
