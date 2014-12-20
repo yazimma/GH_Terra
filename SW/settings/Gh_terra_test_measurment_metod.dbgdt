@@ -38,7 +38,7 @@
         <expressions>
           
           
-        <item>CLK_GetFlagStatus</item><item>main_structure</item><item>main_structure</item><item></item></expressions>
+        <item>CLK_GetFlagStatus</item><item>main_structure</item><item>main_structure</item><item/></expressions>
         <col-names>
           
           

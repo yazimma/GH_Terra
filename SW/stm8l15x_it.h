@@ -66,8 +66,7 @@
  INTERRUPT void TIM1_CC_IRQHandler(void);/* TIM1 CAP*/
  INTERRUPT void TIM4_UPD_OVF_TRG_IRQHandler(void); /* TIM4 UPD/OVF/TRI */
  INTERRUPT void SPI1_IRQHandler(void); /* SPI1 */
- INTERRUPT void USART1_TX_TIM5_UPD_OVF_TRG_BRK_IRQHandler(void); /* USART1 TX / TIM5 UPD/OVF/TRG/BRK */
- INTERRUPT void USART1_RX_TIM5_CC_IRQHandler(void); /* USART1 RX / TIM5 CAP */
+ 
  INTERRUPT void I2C1_SPI2_IRQHandler(void); /* I2C1 / SPI2 */
 #endif /* _RAISONANCE_ */
 

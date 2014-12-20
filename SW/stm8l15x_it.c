@@ -118,13 +118,13 @@ INTERRUPT_HANDLER(DMA1_CHANNEL2_3_IRQHandler, 3)
   * @param  None
   * @retval None
   */
-INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler, 4)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-  RTC_ClearITPendingBit(RTC_IT_WUT);
-}
+//INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler, 4)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//  RTC_ClearITPendingBit(RTC_IT_WUT);
+//}
 
 /**
   * @brief External IT PORTE/F and PVD Interrupt routine.
@@ -167,24 +167,26 @@ INTERRUPT_HANDLER(EXTID_H_IRQHandler, 7)
   * @param  None
   * @retval None
   */
-INTERRUPT_HANDLER(EXTI0_IRQHandler, 8)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
-
-/**
-  * @brief External IT PIN1 Interrupt routine.
-  * @param  None
-  * @retval None
-  */
-INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
+//INTERRUPT_HANDLER(EXTI0_IRQHandler, 8)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//   EXTI_ClearITPendingBit(EXTI_IT_Pin0);
+//}
+//
+///**
+//  * @brief External IT PIN1 Interrupt routine.
+//  * @param  None
+//  * @retval None
+//  */
+//INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//   EXTI_ClearITPendingBit(EXTI_IT_Pin1);
+//}
 
 /**
   * @brief External IT PIN2 Interrupt routine.
@@ -227,24 +229,26 @@ INTERRUPT_HANDLER(EXTI4_IRQHandler, 12)
   * @param  None
   * @retval None
   */
-INTERRUPT_HANDLER(EXTI5_IRQHandler, 13)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
-
-/**
-  * @brief External IT PIN6 Interrupt routine.
-  * @param  None
-  * @retval None
-  */
-INTERRUPT_HANDLER(EXTI6_IRQHandler, 14)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
+//INTERRUPT_HANDLER(EXTI5_IRQHandler, 13)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//  EXTI_ClearITPendingBit(EXTI_IT_Pin5);
+//}
+//
+///**
+//  * @brief External IT PIN6 Interrupt routine.
+//  * @param  None
+//  * @retval None
+//  */
+//INTERRUPT_HANDLER(EXTI6_IRQHandler, 14)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//   EXTI_ClearITPendingBit(EXTI_IT_Pin6);
+//}
 
 /**
   * @brief External IT PIN7 Interrupt routine.
@@ -287,70 +291,8 @@ INTERRUPT_HANDLER(SWITCH_CSS_BREAK_DAC_IRQHandler, 17)
   */
 
 
-extern main_struct_t main_structure;
 
-INTERRUPT_HANDLER(ADC1_COMP_IRQHandler, 18)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-  
-  if(main_structure.adc_state == ADC_CH1)
-  {
-    main_structure.adc_value1 = ADC_GetConversionValue(ADC1);
-  };
-  
-  if(main_structure.adc_state == ADC_CH2)
-  {
-    main_structure.adc_value2 = ADC_GetConversionValue(ADC1);
-  };
-  adc_off();
-  
-//  main_structure.adc_calc+=ADC_GetConversionValue(ADC1);
-//  main_structure.indx++;
- 
-  //////////////////////////////////////////////////////////////////////////////
-//  if (
-//    if (main_structure.indx >= ADC_INDEX)
-//    {
-//      main_structure.adc_calc/=main_structure.indx;
-//      main_structure.adc_value1 = main_structure.adc_calc;
-//      main_structure.indx = 0;
-//      main_structure.adc_calc = 0;
-//      
-//    }
-//    else 
-//    {
-//      ADC_SoftwareStartConv(ADC1);
-//    };
-//    
- ////////////////////////////////////////////////////////////////////////////////// 
-  
-////  if (main_structure.adc_state == ADC_CH2)
-////  {
-//        
-//    if (main_structure.indx >= ADC_INDEX)
-//    {
-//      main_structure.adc_calc/=main_structure.indx;
-//      main_structure.adc_value2 = main_structure.adc_calc;
-//      main_structure.indx = 0;
-//      main_structure.adc_calc = 0;
-//      adc_off();
-//      
-////     sprintf(main_structure.adc_value_string,"%d",main_structure.adc_value); 
-////     main_structure.adc_state = ADC_COMPLIT; 
-////      //itoa(main_structure.adc_value,main_structure.adc_value_string,10);
-//      
-//    }
-//    else 
-//    {
-//      ADC_SoftwareStartConv(ADC1);
-//    };
-//    
-//  };
-  
-   
-}
+
 
 /**
   * @brief TIM2 Update/Overflow/Trigger/Break /USART2 TX Interrupt routine.
@@ -376,36 +318,7 @@ INTERRUPT_HANDLER(TIM2_CC_USART2_RX_IRQHandler, 20)
   */
   /////////////////////////////////////////////////////////////////////////////
   
-    delay_1us(10);
-    GPIO_WriteBit(GPIOE,GPIO_Pin_7,SET);
-    TIM2_ClearFlag(TIM2_FLAG_CC1);
-    ADC_ChannelCmd(ADC1,ADC_Channel_4,DISABLE);
-    ADC_ChannelCmd(ADC1,ADC_Channel_3,ENABLE);
-    ADC_SoftwareStartConv(ADC1);
-    while (ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)== RESET);
-    main_structure.adc_value1 = ADC_GetConversionValue(ADC1);
-    GPIO_WriteBit(GPIOE,GPIO_Pin_7,RESET);
-  ////////////////////////////////////////////////////////////////////////////// 
-    delay_1us(150);
-    GPIO_WriteBit(GPIOE,GPIO_Pin_7,SET);
-    ADC_ChannelCmd(ADC1,ADC_Channel_3,DISABLE);
-    ADC_ChannelCmd(ADC1,ADC_Channel_4,ENABLE);
-    ADC_SoftwareStartConv(ADC1);
-    while (ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)== RESET);
-    main_structure.adc_value2 = ADC_GetConversionValue(ADC1);
-    GPIO_WriteBit(GPIOE,GPIO_Pin_7,RESET);
- ////////////////////////////////////////////////////////////////////////////////    
-    main_structure.adc_calc2 = main_structure.adc_value1 +  main_structure.adc_value2;
-    main_structure.adc_calc2 /=2;
-    if(main_structure.adc_calc2 > 2650)
-    {
-      main_structure.adc_calc2 = main_structure.adc_calc2 - 2650 ;
-    }
-    else
-    {
-      main_structure.adc_calc2=0;
-    };
-      
+    
    
 }
 
@@ -431,34 +344,30 @@ INTERRUPT_HANDLER(TIM3_CC_USART3_RX_IRQHandler, 22)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
-    sprintf(main_structure.adc_value_string,"%u",main_structure.adc_calc2);
-      LCD_GLASS_DisplayString((uint8_t*)main_structure.adc_value_string);
-      TIM3_ClearFlag(TIM3_FLAG_CC1);
-      TIM3_ClearFlag(TIM3_FLAG_CC2);
-  
+     
 }
-/**
-  * @brief TIM1 Update/Overflow/Trigger/Commutation Interrupt routine.
-  * @param  None
-  * @retval None
-  */
-INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_COM_IRQHandler, 23)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
-/**
-  * @brief TIM1 Capture/Compare Interrupt routine.
-  * @param  None
-  * @retval None
-  */
-INTERRUPT_HANDLER(TIM1_CC_IRQHandler, 24)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
+///**
+//  * @brief TIM1 Update/Overflow/Trigger/Commutation Interrupt routine.
+//  * @param  None
+//  * @retval None
+//  */
+//INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_COM_IRQHandler, 23)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//}
+///**
+//  * @brief TIM1 Capture/Compare Interrupt routine.
+//  * @param  None
+//  * @retval None
+//  */
+//INTERRUPT_HANDLER(TIM1_CC_IRQHandler, 24)
+//{
+//  /* In order to detect unexpected events during development,
+//     it is recommended to set a breakpoint on the following instruction.
+//  */
+//}
 
 /**
   * @brief TIM4 Update/Overflow/Trigger Interrupt routine.
@@ -488,29 +397,13 @@ INTERRUPT_HANDLER(SPI1_IRQHandler, 26)
   */
 }
 
-/**
-  * @brief USART1 TX / TIM5 Update/Overflow/Trigger/Break Interrupt  routine.
-  * @param  None
-  * @retval None
-  */
-INTERRUPT_HANDLER(USART1_TX_TIM5_UPD_OVF_TRG_BRK_IRQHandler, 27)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
 
 /**
   * @brief USART1 RX / Timer5 Capture/Compare Interrupt routine.
   * @param  None
   * @retval None
   */
-INTERRUPT_HANDLER(USART1_RX_TIM5_CC_IRQHandler, 28)
-{
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-}
+
 
 /**
   * @brief I2C1 / SPI2 Interrupt routine.
