@@ -8,13 +8,22 @@ char lcd_bufer[4];
 
 void lcd_low_temp(void)
 {
- sim7_clr();
-sim8_clr();
-sim9_clr();
-s212;
-s214;
-s216;
-  
+ sim1_clr();
+sim2_clr();
+sim3_clr();
+#ifdef __dash
+s200;
+s202;
+s204;
+#else
+s300;
+s100;
+s001;
+s102;
+s202;
+s103;
+s003;
+#endif //__dash
   
 };
 
@@ -130,7 +139,7 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
   
   switch(place)
   {
-  case LCD_MAX_LEVEL:
+  case LCD_CAR_LEVEL: 
 
     for ( char lcd_indx=0;lcd_indx < 3; lcd_indx++)
     {
@@ -518,7 +527,7 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
     break;
  //===========================================END_OF_MAX_LEVEL===================================== 
  //===========================================MIN_LEVEL_SIMBOL_SINTEZ==============================
-  case LCD_MIN_LEVEL:
+  case LCD_MAX_LEVEL: 
     for ( char lcd_indx=0;lcd_indx < 3; lcd_indx++)
     {
       switch(lcd_bufer[lcd_indx])
@@ -904,7 +913,7 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
    
     
     break;
-     case LCD_CAR_LEVEL:
+     case LCD_MIN_LEVEL: 
     for ( char lcd_indx=0;lcd_indx < 3; lcd_indx++)
     {
       switch(lcd_bufer[lcd_indx])

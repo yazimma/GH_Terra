@@ -29,28 +29,31 @@ INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler, 4)
   SystemTime.auto_exit_setup--;
 };
 
-  if(Main_DSM_status != TERRA_SETUP)
+if(Main_DSM_status != TERRA_SETUP)
+{
+  if (Main_DSM_status != TERRA_SERVISE)
   {
     if(!SystemTime.adc_get_time)
-{
-   SystemTime.adc_get_time = ADC_GET_VALUE_PERIOD;
-   Main_DSM_status = TERRA_MEASURE;
-};
-if(!SystemTime.sensor_get_time)
-{
-   SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD;
-   Main_DSM_status = TERRA_SENSOR;
-};
-
-if(SystemTime.auto_off_manual_mode_timer > 0)
-{
-   SystemTime.auto_off_manual_mode_timer --;
-};
-
-
-
+    {
+      SystemTime.adc_get_time = ADC_GET_VALUE_PERIOD;
+      Main_DSM_status = TERRA_MEASURE;
+    };
+    if(!SystemTime.sensor_get_time)
+    {
+      SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD;
+      Main_DSM_status = TERRA_SENSOR;
+    };
+    
+    if(SystemTime.auto_off_manual_mode_timer > 0)
+    {
+      SystemTime.auto_off_manual_mode_timer --;
+    };
   };
-  RTC_ClearITPendingBit(RTC_IT_WUT);
+  
+  
+  
+};
+RTC_ClearITPendingBit(RTC_IT_WUT);
 }
 
 void auto_exit_reset(void)

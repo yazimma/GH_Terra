@@ -24,6 +24,7 @@
 #include "lcd.h"
 #include "system_time.h"
 #include "configuration.h"
+#include "math.h"
 //#define __DEBUG
 
 #define TEST_DISPLAY_DELAY 50000
@@ -33,6 +34,9 @@ tMainDataStruct MainDataStruct;
 extern tStateMashine_status ADC_DSM_state;
 extern tStateMashine_status Main_DSM_status;
 extern tStateMashine_status Setup_DSM_status;
+extern tsSystemTime SystemTime;
+extern uint8_t scrool;
+
 
 static uint16_t old_max_level;
 static uint16_t old_min_level;
@@ -55,40 +59,42 @@ EXTI_ClearITPendingBit(EXTI_IT_Pin0);
 }
 INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)  //Кнопка Down
 {
-  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MAX_LEVEL))
-  {
-    if(MainDataStruct.max_level > MainDataStruct.min_level)
-    {
-      MainDataStruct.max_level--;
-    };
-  };
-  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MIN_LEVEL))
-  {
-    if(MainDataStruct.min_level > 20)
-    {
-      MainDataStruct.min_level--;
-    };
-  };
+  scrool = 0;
+//  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MAX_LEVEL))
+//  {
+//    if(MainDataStruct.max_level > MainDataStruct.min_level)
+//    {
+//      MainDataStruct.max_level--;
+//    };
+//  };
+//  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MIN_LEVEL))
+//  {
+//    if(MainDataStruct.min_level > 20)
+//    {
+//      MainDataStruct.min_level--;
+//    };
+//  };
 MainDataStruct.down_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin1);
 }
 
 INTERRUPT_HANDLER(EXTI5_IRQHandler, 13) //Кнопка Up
 {
-  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MAX_LEVEL))
-  {
-    if(MainDataStruct.max_level < 999)
-    {
-      MainDataStruct.max_level++;
-    };
-  };
-  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MIN_LEVEL))
-  {
-    if(MainDataStruct.min_level < MainDataStruct.max_level)
-    {
-      MainDataStruct.min_level++;
-    };
-  };
+  scrool = 0;
+//  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MAX_LEVEL))
+//  {
+//    if(MainDataStruct.max_level < 999)
+//    {
+//      MainDataStruct.max_level++;
+//    };
+//  };
+//  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MIN_LEVEL))
+//  {
+//    if(MainDataStruct.min_level < MainDataStruct.max_level)
+//    {
+//      MainDataStruct.min_level++;
+//    };
+//  };
 MainDataStruct.up_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin5);
 }
@@ -113,6 +119,22 @@ void main(void)
   lcd_init();
   DSM_Init();
   system_timer_init();
+  //------------------LOAD_FROM_EEPROM---------------------
+  if ( ee_lock_temperature == 0) //Если в EEPROM ничего нет то запишем установки по умолчанию
+  {
+    unlock_eeprom();
+    ee_lock_temperature = 18300;
+    ee_zero_level = 250;
+    ee_max_level = 800;
+    ee_min_level = 400;
+    lock_eeprom();
+  };
+  //Загрузим из EEPROM данные
+  MainDataStruct.lock_temperature = ee_lock_temperature;
+  MainDataStruct.zero_level = ee_zero_level;
+  MainDataStruct.max_level = ee_max_level;
+  MainDataStruct.min_level = ee_min_level;
+  
   while (1)
     {
       //while (!Go){asm("NOP");};
@@ -121,7 +143,10 @@ void main(void)
       ADC_DSM ();
       if(Main_DSM_status != TERRA_SETUP)  //Если в режиме установки не обновлять экран. 
       {
-        LCD_update();
+        if(Main_DSM_status != TERRA_SERVISE)
+        {
+          LCD_update();
+        };
       };
       
       
@@ -297,16 +322,16 @@ void  DSM_Init(void)
 
 void LCD_update(void)
 {
-  if (old_max_level != MainDataStruct.max_level)
+  if (old_max_level != MainDataStruct.max_level) 
   {
     lcd_data_write(LCD_MAX_LEVEL,MainDataStruct.max_level);
     old_max_level = MainDataStruct.max_level;
   };
   
-  if (old_min_level != MainDataStruct.min_level)
+  if (old_min_level != MainDataStruct.min_level)// 
   {
-    lcd_data_write(LCD_MIN_LEVEL,MainDataStruct.min_level);
-    old_min_level = MainDataStruct.min_level;
+    lcd_data_write(LCD_MIN_LEVEL,MainDataStruct.min_level); //
+    old_min_level = MainDataStruct.min_level;// 
   };
 
 
@@ -322,7 +347,7 @@ void LCD_update(void)
       lcd_low_temp();
     };
   };
-
+  
   
   if (old_battary_status != MainDataStruct.battary_status)
   {

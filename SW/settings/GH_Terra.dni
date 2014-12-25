@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1727840900
+Checksum=-1210030863
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -41,6 +41,8 @@ ActionState=1
 [Trace1]
 Enabled=0
 ShowSource=1
+[watch_formats]
+Fmt0={W}0:V90_msb	4	0
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
@@ -54,7 +56,7 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\main.c}.322.7" 1 0 0 0 "" 0 ""
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\Main_DSM.c}.75.4" 1 0 0 0 "" 0 ""
 Count=1
 [Aliases]
 Count=0

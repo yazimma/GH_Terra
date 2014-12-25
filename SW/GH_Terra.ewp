@@ -1587,6 +1587,9 @@
       <name>$PROJ_DIR$\STM8L15x-16x-05x-AL31-L_StdPeriph_Lib_V1.6.1\Libraries\STM8L15x_StdPeriph_Driver\src\stm8l15x_exti.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\STM8L15x-16x-05x-AL31-L_StdPeriph_Lib_V1.6.1\Libraries\STM8L15x_StdPeriph_Driver\src\stm8l15x_flash.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\STM8L15x-16x-05x-AL31-L_StdPeriph_Lib_V1.6.1\Libraries\STM8L15x_StdPeriph_Driver\src\stm8l15x_gpio.c</name>
     </file>
     <file>

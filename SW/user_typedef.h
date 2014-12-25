@@ -16,6 +16,20 @@
 
 #define VALVE_RESET()   {GPIO_WriteBit(GPIOE, GPIO_Pin_6,RESET);\
                         GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}
+#define unlock_eeprom() {FLASH_Unlock(FLASH_MemType_Data);}
+#define lock_eeprom()   {FLASH_Lock(FLASH_MemType_Data);}
+//--------------------------EEPROM------------------------------------------------------
+#pragma location = 0x1000
+__no_init uint16_t ee_lock_temperature;
+#pragma location = 0x1010
+__no_init uint16_t ee_zero_level;
+
+#pragma location = 0x1020
+__no_init uint16_t ee_max_level;
+#pragma location = 0x1030
+__no_init uint16_t ee_min_level;
+
+//----------------------------END_OF_EEPROM---------------------------------------------
 
 typedef enum {
 READY_TO_SUSPEND,
@@ -45,6 +59,11 @@ INIT,
   SETUP_MIN_LEVEL,
   ENTER_SETUP,
   SETUP_EXIT,
+  TERRA_SERVISE,
+  ENTER_SERVICE_MENU,
+  SETUP_TEMP_LEVEL,
+  SETUP_ZERO_LEVEL,
+  SETUP_SERVISE_EXIT,
 }tStateMashine_status;
 
 typedef enum {
@@ -89,10 +108,11 @@ typedef struct {
   unsigned valve_key_pressed:1;
   teValveStatus armed;
   teBattaryLevel battary_status;
-  uint16_t temperature;
+  int16_t temperature;
   uint16_t lock_temperature;
   uint16_t battary_level;
   uint16_t sensor;
+  uint16_t zero_level;
   enum {
     ADC_BUSY,
     ADC_IDLE,
