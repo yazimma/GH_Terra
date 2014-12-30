@@ -44,6 +44,7 @@ uint16_t old_car_level;
 static teBattaryLevel old_battary_status;
 static teValveStatus old_valve_status;
 static teValveStatus old_arm_status; 
+uint16_t blow_count;
 bool Go = FALSE;
 //---------------------------------Прототипы функций----------------------------------------------
 void clock_init (void);
@@ -53,13 +54,22 @@ void LCD_update(void);
 //-------------------------------------------------------------------------------------------------
 //Прерывания клавиш -------------------------------------------------------------------------------
 INTERRUPT_HANDLER(EXTI0_IRQHandler, 8)  //Кнопка SET
+{ if(!MainDataStruct.exe_mode)
 {
+  MainDataStruct.fast_mode = 1;
+  SystemTime.sensor_get_time = 0;
+};
 MainDataStruct.valve_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin0);
 }
 INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)  //Кнопка Down
 {
   scrool = 0;
+  if(!MainDataStruct.exe_mode)
+{
+  MainDataStruct.fast_mode = 1;
+  SystemTime.sensor_get_time = 0;
+};
 //  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MAX_LEVEL))
 //  {
 //    if(MainDataStruct.max_level > MainDataStruct.min_level)
@@ -81,6 +91,11 @@ EXTI_ClearITPendingBit(EXTI_IT_Pin1);
 INTERRUPT_HANDLER(EXTI5_IRQHandler, 13) //Кнопка Up
 {
   scrool = 0;
+  if(!MainDataStruct.exe_mode)
+{
+  MainDataStruct.fast_mode = 1;
+  SystemTime.sensor_get_time = 0;
+};
 //  if((Main_DSM_status == TERRA_SETUP) && (Setup_DSM_status == SETUP_MAX_LEVEL))
 //  {
 //    if(MainDataStruct.max_level < 999)
@@ -100,7 +115,12 @@ EXTI_ClearITPendingBit(EXTI_IT_Pin5);
 }
 INTERRUPT_HANDLER(EXTI6_IRQHandler, 14) //Кнопка Valve
 {
-
+ if(!MainDataStruct.exe_mode)
+{
+  MainDataStruct.fast_mode = 1;
+  SystemTime.sensor_get_time = 0;
+};
+ SystemTime.off_fast_mode = FAST_MODE_DUTY;
 MainDataStruct.set_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin6);
 }
@@ -137,7 +157,6 @@ void main(void)
   
   while (1)
     {
-      //while (!Go){asm("NOP");};
       
       Main_DSM ();
       ADC_DSM ();
@@ -293,7 +312,7 @@ void  DSM_Init(void)
     MainDataStruct.min_level = 500;
     MainDataStruct.lock_temperature = LOCK_TEMPERATURE;
     MainDataStruct.valve_status = VALVE_OFF;
-    MainDataStruct.armed = DISARMED;
+    MainDataStruct.armed = ARMED;
     MainDataStruct.valve_status = VALVE_OFF;
    M_POWER_ON();
    VALVE_CLOSE();
@@ -354,12 +373,38 @@ void LCD_update(void)
    lcd_bat_level(MainDataStruct.battary_status);
     old_battary_status = MainDataStruct.battary_status;
   };
-  if (old_valve_status != MainDataStruct.valve_status)
+  //Пробуем мигать каплей
+  if( MainDataStruct.temporary_manual_mode)
+  {
+    blow_count++;
+    
+    if(blow_count > BLOW_COUNT_PERIOD_BLINK)
+    {
+      blow_count = 0;
+      
+      if(MainDataStruct.valve_status == VALVE_ON)
+      {
+        
+        MainDataStruct.valve_status = VALVE_OFF;
+        
+      }
+      else
+      {
+        
+        MainDataStruct.valve_status = VALVE_ON;
+        
+      };
+    };
+  };
+  
+  if (old_valve_status != MainDataStruct.valve_status)  //Капля
   {
    lcd_valve(MainDataStruct.valve_status);
     old_valve_status = MainDataStruct.valve_status;
   };
-  if (old_arm_status != MainDataStruct.armed)
+  
+  
+  if (old_arm_status != MainDataStruct.armed) //Кран
   {
    lcd_valve(MainDataStruct.armed);
     old_arm_status = MainDataStruct.armed;

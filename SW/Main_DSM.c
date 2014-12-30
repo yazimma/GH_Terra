@@ -1,4 +1,5 @@
 #define delay_scrool()  for(uint16_t y=0;y<50000;y++){asm("NOP");}
+#define delay_key_counter() for(uint16_t y=0;y<1000;y++){asm("NOP");}
 #include "stm8l15x.h"
 #include "main.h"
 #include "usart_debug.h"
@@ -38,6 +39,8 @@ uint8_t scrool;
 uint16_t set_key_counter;
 uint16_t valve_key_counter;
 uint16_t servise_menu_counter;
+uint16_t down_key_counter;
+uint16_t up_key_counter;
 
 
 tErr Main_DSM (void)
@@ -108,46 +111,85 @@ case TERRA_STANDBY:
   }
   else
   {
-    if((set_key_counter < SET_KEY_DELAY) && (set_key_counter > PROTECT_SET_KEY_DELAY))
-    {
-      MainDataStruct.set_key_pressed = 0;
-      if (MainDataStruct.armed == DISARMED)
-      {
-        MainDataStruct.armed = ARMED;
-      }
-      else 
-      {
-        MainDataStruct.armed = DISARMED;
-      };
-    };
     MainDataStruct.set_key_pressed = 0;
     set_key_counter = 0;
   };
+  //====================================VALVE_KEY_CONTROL====================================
   
+//  if (VALVE_KEY_PRESSED() && MainDataStruct.valve_key_pressed)
+//  {
+//    
+//    valve_key_counter++;
+//    if(valve_key_counter >= VALVE_KEY_DELAY)
+//    {
+//      MainDataStruct.valve_key_pressed = 0;
+//      if(MainDataStruct.valve_status == VALVE_OFF)
+//      {
+//        Main_DSM_status = TERRA_VALVE_OPEN;
+//        valve_key_counter = 0;
+//      }
+//      else
+//      {
+//        Main_DSM_status = TERRA_VALVE_CLOSE;
+//        valve_key_counter = 0;
+//      };
+//        
+//    };
+//  }
+//  else
+//  {
+//    valve_key_counter = 0;
+//  };
   
-  if (VALVE_KEY_PRESSED() && MainDataStruct.valve_key_pressed)
+  if(UP_KEY_PRESSED() && MainDataStruct.up_key_pressed)
   {
-    
-    valve_key_counter++;
-    if(valve_key_counter >= VALVE_KEY_DELAY)
+    up_key_counter++;
+    if (up_key_counter >= PROTECT_SET_KEY_DELAY)
     {
-      MainDataStruct.valve_key_pressed = 0;
-      if(MainDataStruct.valve_status == VALVE_OFF)
+      MainDataStruct.up_key_pressed = 0;
+      if(MainDataStruct.armed == DISARMED)
       {
+        MainDataStruct.up_key_pressed = 0;
         Main_DSM_status = TERRA_VALVE_OPEN;
-        valve_key_counter = 0;
+        up_key_counter = 0;
       }
       else
       {
-        Main_DSM_status = TERRA_VALVE_CLOSE;
-        valve_key_counter = 0;
+        SystemTime.auto_return_in_armed_mode = TIMEOUT_FOR_RETURN_IN_ARMED_MODE;
+        up_key_counter = 0;
+        MainDataStruct.temporary_manual_mode = 1;
+        Main_DSM_status = TERRA_VALVE_OPEN;
       };
-        
+    }
+  }
+    else
+    {
+    up_key_counter = 0;
+  };
+  
+  if(DOWN_KEY_PRESSED() && MainDataStruct.down_key_pressed)
+  {
+    down_key_counter++;
+    if (down_key_counter >= PROTECT_SET_KEY_DELAY)
+    {
+      MainDataStruct.down_key_pressed = 0;
+      if(MainDataStruct.armed == DISARMED)
+      {
+        Main_DSM_status = TERRA_VALVE_CLOSE;
+        down_key_counter = 0;
+      }
+      else
+      {
+        down_key_counter = 0;
+        SystemTime.auto_return_in_armed_mode = TIMEOUT_FOR_RETURN_IN_ARMED_MODE;
+        MainDataStruct.temporary_manual_mode = 1;
+        Main_DSM_status = TERRA_VALVE_CLOSE;
+      };
     };
   }
-  else
-  {
-    valve_key_counter = 0;
+    else
+    {
+    down_key_counter = 0;
   };
       //---------------------------------Battary Level Control-------------------------------------
       if(MainDataStruct.battary_level > 2700)
@@ -176,16 +218,21 @@ case TERRA_STANDBY:
       };
       };
  //------------------------------------------------SENSOR_LEVEL_CONTROL-------------------
+      if(!SystemTime.auto_return_in_armed_mode)
+      {
+        MainDataStruct.temporary_manual_mode = 0;
+      };
+        
    if (MainDataStruct.car_level <= MainDataStruct.min_level)
    {
-     if((MainDataStruct.armed == ARMED) && (MainDataStruct.valve_status == VALVE_OFF))
+     if((MainDataStruct.armed == ARMED) && (MainDataStruct.valve_status == VALVE_OFF) && (!MainDataStruct.temporary_manual_mode))
      {
        Main_DSM_status = TERRA_VALVE_OPEN;
      };
    };
    if (MainDataStruct.car_level >= MainDataStruct.max_level)
    {
-     if((MainDataStruct.armed == ARMED) && (MainDataStruct.valve_status == VALVE_ON))
+     if((MainDataStruct.armed == ARMED) && (MainDataStruct.valve_status == VALVE_ON) && (!MainDataStruct.temporary_manual_mode))
      {
        Main_DSM_status = TERRA_VALVE_CLOSE;
      };
@@ -218,6 +265,18 @@ case TERRA_STANDBY:
        old_car_level = 32000;
      };
    };
+   //======================FAST_MODE_CONTROL==================================
+   if(!SystemTime.off_fast_mode)
+   {
+     MainDataStruct.fast_mode = 0;
+   };
+   
+  if(!SystemTime.exe_mode_off)
+   {
+     MainDataStruct.exe_mode = 0;
+   }; 
+   
+   
   break;
   
   case TERRA_MEASURE:
@@ -235,14 +294,55 @@ case TERRA_STANDBY:
     
     switch (Setup_DSM_status)
     {
+    case SETUP_TO_MANUAL:
+      
+      if (SET_KEY_PRESSED())
+    {
+      set_key_counter++;
+      delay_key_counter();
+      if(set_key_counter >= DELAY_FOR_MANUAL_MODE)
+      {
+        set_key_counter = 0;
+        if (MainDataStruct.armed == ARMED)
+        {
+          MainDataStruct.armed = DISARMED;
+        }
+        else 
+        {
+          MainDataStruct.armed = ARMED;
+        };
+        Main_DSM_status = TERRA_STANDBY;
+        lcd_data_write(LCD_MAX_LEVEL,MainDataStruct.max_level);
+        lcd_data_write(LCD_MIN_LEVEL,MainDataStruct.min_level);
+        lcd_data_write(LCD_CAR_LEVEL,MainDataStruct.car_level);
+        lcd_bat_level(MainDataStruct.battary_status);
+        lcd_valve(MainDataStruct.valve_status);
+        lcd_valve(MainDataStruct.armed);
+        Main_DSM_status = TERRA_STANDBY;
+      };
+      
+    }
+    else
+    {
+      Setup_DSM_status = SETUP_MAX_LEVEL;
+       
+    };
+      break;
+      
     case ENTER_SETUP:
       auto_exit_reset();
     ADC_DSM_state = ADC_DEINIT; 
     lcd_clear_all();
     blink(ON);
+    lcd_data_write(LCD_MAX_LEVEL,MainDataStruct.max_level);
     old_max_level = 32000;
     old_min_level = 32000;
-    Setup_DSM_status = SETUP_MAX_LEVEL; 
+    Setup_DSM_status = SETUP_TO_MANUAL;
+    set_key_counter = 0;
+    
+   
+   
+    
     break;
  //==================================MAX_LEVEL_SETUP===========================================   
   case SETUP_MAX_LEVEL:
@@ -306,13 +406,15 @@ case TERRA_STANDBY:
     {
       auto_exit_reset();
       set_key_counter++;
-      if(set_key_counter >= SET_KEY_DELAY)
+      if(set_key_counter >= SET_KEY_DELAY_IN_MENU)
       {
         MainDataStruct.set_key_pressed = 0;
         Setup_DSM_status = SETUP_MIN_LEVEL;
         set_key_counter = 0;
         lcd_clear_all();
         blink(ON);
+        lcd_data_write(LCD_MIN_LEVEL,MainDataStruct.min_level);
+        while (SET_KEY_PRESSED()){};
       };
     }
     else
@@ -348,6 +450,7 @@ case TERRA_STANDBY:
           };
         };
     };
+    
     if(UP_KEY_PRESSED())
     {
       auto_exit_reset();
@@ -379,14 +482,11 @@ case TERRA_STANDBY:
     {
       auto_exit_reset();
       set_key_counter++;
-      if(set_key_counter >= SET_KEY_DELAY)
+      if(set_key_counter >= SET_KEY_DELAY_IN_MENU)
       {
         MainDataStruct.set_key_pressed = 0;
         Setup_DSM_status = SETUP_EXIT;
-        set_key_counter = 0;
-        //lcd_clear_all();
-       // blink(OFF);
-               
+        set_key_counter = 0;               
       };
     }
     else
@@ -429,20 +529,54 @@ case TERRA_STANDBY:
   };
   
   break;
-//==================================================================================================
+//==========================================SERVICE=============================================
   case TERRA_SERVISE:
     
     switch (Setup_servise_DSM_status)
     {
+    
     case ENTER_SERVICE_MENU:
-      auto_exit_reset();
-      pre_setup.pre_temp = MainDataStruct.lock_temperature;
-      pre_setup.pre_zero_level = MainDataStruct.zero_level ;
-      ADC_DSM_state = ADC_DEINIT; 
       lcd_clear_all();
-      old_max_level = 32000;
-      old_min_level = 32000;
-      Setup_servise_DSM_status = SETUP_TEMP_LEVEL; 
+      
+      if ((UP_KEY_PRESSED()) && (DOWN_KEY_PRESSED()))
+      {
+        servise_menu_counter++;
+        if(servise_menu_counter > SERVISE_MENU_DELAY)
+        {
+          servise_menu_counter = 0;
+          lcd_data_write(LCD_CAR_LEVEL,888);
+          lcd_data_write(LCD_MAX_LEVEL,888);
+          blink(ON);
+          while(UP_KEY_PRESSED()){};
+          blink(OFF);
+          if (MainDataStruct.exe_mode == 0)
+          {
+            MainDataStruct.exe_mode = 1;
+            SystemTime.exe_mode_off = EXE_MODE_DUTY;
+          }
+          else
+          {
+            MainDataStruct.exe_mode = 0;
+            SystemTime.exe_mode_off = 0;
+          };
+          Setup_servise_DSM_status = SETUP_SERVISE_EXIT;
+           MainDataStruct.fast_mode = 0;
+          pre_setup.pre_temp = MainDataStruct.lock_temperature;
+          pre_setup.pre_zero_level = MainDataStruct.zero_level ;
+         };
+      }
+      else
+      {
+        servise_menu_counter = 0;
+        auto_exit_reset();
+        pre_setup.pre_temp = MainDataStruct.lock_temperature;
+        pre_setup.pre_zero_level = MainDataStruct.zero_level ;
+        ADC_DSM_state = ADC_DEINIT; 
+        lcd_clear_all();
+        old_max_level = 32000;
+        old_min_level = 32000;
+        Setup_servise_DSM_status = SETUP_TEMP_LEVEL; 
+      };
       break;
       //==================================MAX_LEVEL_SETUP===========================================   
     case SETUP_TEMP_LEVEL:

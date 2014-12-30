@@ -64,6 +64,7 @@ INIT,
   SETUP_TEMP_LEVEL,
   SETUP_ZERO_LEVEL,
   SETUP_SERVISE_EXIT,
+  SETUP_TO_MANUAL,
 }tStateMashine_status;
 
 typedef enum {
@@ -106,6 +107,9 @@ typedef struct {
   unsigned up_key_pressed:1;
   unsigned down_key_pressed:1;
   unsigned valve_key_pressed:1;
+  unsigned temporary_manual_mode:1;
+  unsigned fast_mode:1;
+  unsigned exe_mode:1;
   teValveStatus armed;
   teBattaryLevel battary_status;
   int16_t temperature;
@@ -128,6 +132,9 @@ typedef struct {
   uint32_t sensor_get_time;
   uint32_t auto_exit_setup;
   uint32_t auto_off_manual_mode_timer;
+  uint32_t auto_return_in_armed_mode;
+  uint32_t off_fast_mode;
+  uint32_t exe_mode_off;
 }tsSystemTime;
 
 typedef enum{

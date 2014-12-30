@@ -4,6 +4,7 @@
 
 
 tsSystemTime SystemTime;
+extern tMainDataStruct MainDataStruct;
 
 extern tStateMashine_status Main_DSM_status;
 
@@ -40,8 +41,36 @@ if(Main_DSM_status != TERRA_SETUP)
     };
     if(!SystemTime.sensor_get_time)
     {
-      SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD;
-      Main_DSM_status = TERRA_SENSOR;
+      if(!MainDataStruct.exe_mode)
+      {
+        if(!MainDataStruct.fast_mode)
+        {
+          if (MainDataStruct.valve_status == VALVE_ON)
+          {
+            SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD_VALVE_ON;
+          }
+          else
+          {
+            SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD_VALVE_OFF; 
+          };
+          Main_DSM_status = TERRA_SENSOR;
+        }
+        else
+        {
+          SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD_FAST_MODE;
+          Main_DSM_status = TERRA_SENSOR;
+        };
+      }
+      else
+      {
+        SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD_EXE_MODE;
+        Main_DSM_status = TERRA_SENSOR;
+      };
+    };
+    
+    if(SystemTime.off_fast_mode > 0)
+    {
+       SystemTime.off_fast_mode--;
     };
     
     if(SystemTime.auto_off_manual_mode_timer > 0)
@@ -53,6 +82,18 @@ if(Main_DSM_status != TERRA_SETUP)
   
   
 };
+
+if(SystemTime.auto_return_in_armed_mode > 0)
+{
+  SystemTime.auto_return_in_armed_mode--;
+};
+if(SystemTime.exe_mode_off > 0)
+{
+  SystemTime.exe_mode_off--;
+};
+
+
+
 RTC_ClearITPendingBit(RTC_IT_WUT);
 }
 
@@ -70,7 +111,7 @@ void system_timer_init(void)
  RTC_SetWakeUpCounter(MAIN_PERIOD);
  RTC_ITConfig(RTC_IT_WUT,ENABLE);
  RTC_WakeUpCmd(ENABLE);
- SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD ;
+ SystemTime.sensor_get_time = ADC_GET_SENSOR_PERIOD_VALVE_ON ;
   SystemTime.adc_get_time = 1;  
  
  

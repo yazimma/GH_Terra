@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 char lcd_bufer[4];
+extern tMainDataStruct MainDataStruct; 
 
 void lcd_low_temp(void)
 {
@@ -76,21 +77,24 @@ void lcd_valve(teValveStatus valve_status)
 {  //LCD->RAM[1]&= ~0x50;
   switch (valve_status)
   {
-    
+     
   case VALVE_ON:
-  LCD->RAM[1]|= (1<<4); 
+  LCD->RAM[1]|=(1<<6);//LCD->RAM[1]|= (1<<4); 
     break;
     
   case VALVE_OFF:
-   LCD->RAM[1]&=(~(1<<4));  
+   LCD->RAM[1]&=(~(1<<6)); //LCD->RAM[1]&=(~(1<<4));  
     break;
     
   case ARMED:
-    LCD->RAM[1]|=(1<<6);
+    LCD->RAM[1]&=(~(1<<4));//LCD->RAM[1]|= (1<<4);//LCD->RAM[1]|=(1<<6);
     break;
     
   case DISARMED:
-   LCD->RAM[1]&=(~(1<<6)); 
+    if(!MainDataStruct.temporary_manual_mode)
+    {
+      LCD->RAM[1]|= (1<<4);//LCD->RAM[1]&=(~(1<<4));//LCD->RAM[1]&=(~(1<<6)); 
+    };
     break;
   case ALL_OFF:
       LCD->RAM[1]&= ~0x50;
