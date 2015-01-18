@@ -15,7 +15,7 @@ INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler, 4)
   */
 //  GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
 //  for(uint16_t l=0;l<10ul;l++){asm("NOP");};
-//   GPIO_WriteBit(GPIOF, GPIO_Pin_0, RESET);
+//  GPIO_WriteBit(GPIOF, GPIO_Pin_0, RESET);
   SystemTime.on_timer++; //Таймер на 136 лет .... Гы!
   if (SystemTime.sensor_get_time > 0)
   {
@@ -78,9 +78,6 @@ if(Main_DSM_status != TERRA_SETUP)
       SystemTime.auto_off_manual_mode_timer --;
     };
   };
-  
-  
-  
 };
 
 if(SystemTime.auto_return_in_armed_mode > 0)
@@ -92,8 +89,12 @@ if(SystemTime.exe_mode_off > 0)
   SystemTime.exe_mode_off--;
 };
 
-
-
+if( SystemTime.sensor_get_time == SystemTime.adc_get_time)   //Чтобы не совпадали опросы АЦП
+{
+  SystemTime.sensor_get_time+=2;
+  SystemTime.adc_get_time+=4;
+};
+MainDataStruct.ready_to_suspend = 0;
 RTC_ClearITPendingBit(RTC_IT_WUT);
 }
 

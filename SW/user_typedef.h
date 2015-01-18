@@ -108,6 +108,8 @@ typedef struct {
   unsigned down_key_pressed:1;
   unsigned valve_key_pressed:1;
   unsigned temporary_manual_mode:1;
+  unsigned max_level_lcd_on:1;
+  unsigned min_level_lcd_on:1;
   unsigned fast_mode:1;
   unsigned exe_mode:1;
   teValveStatus armed;
@@ -117,12 +119,13 @@ typedef struct {
   uint16_t battary_level;
   uint16_t sensor;
   uint16_t zero_level;
+  bool ready_to_suspend;
   enum {
     ADC_BUSY,
     ADC_IDLE,
     ADC_COMPLITE,
     ADC_ERR,
-  }eADC_status;
+  }ADC_status;
  
 }tMainDataStruct; 
   

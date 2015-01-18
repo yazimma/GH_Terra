@@ -182,7 +182,7 @@ INTERRUPT_HANDLER(ADC1_COMP_IRQHandler, 18)
 
 void ADC_DSM (void)
 {
-  MainDataStruct.eADC_status = ADC_BUSY;
+  MainDataStruct.ADC_status = ADC_BUSY;
   
   
   switch(ADC_DSM_state)
@@ -194,6 +194,8 @@ void ADC_DSM (void)
     
     chanel = BATTARY;
     conversion_samples = 4;
+    GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
+    M_POWER_ON();
     CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,ENABLE); //Включим тактирование АЦП
     /*Можно использовать сканирование каналов,но это увеличивает потребление из-за включения ДМА. 
     хотя, возможно, потребление ДМА будет меньше чем работа ядра за время работы АЦП. Стоит провести эксперимент*/
@@ -239,8 +241,8 @@ void ADC_DSM (void)
                            ADC_Group_SlowChannels,
                            ADC_SamplingTime_4Cycles);
     
-    GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
-    ADC_TempSensorCmd(ENABLE);
+    //GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
+    //ADC_TempSensorCmd(ENABLE);
    // ADC_VrefintCmd(ENABLE);
     ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
     ADC_ChannelCmd(ADC1,ADC_Channel_Vrefint, DISABLE);
@@ -253,24 +255,27 @@ void ADC_DSM (void)
     
     //Запустим АЦП
   case DO_IT:
-    MainDataStruct.eADC_status = ADC_BUSY;
+    MainDataStruct.ADC_status = ADC_BUSY;
     ADC_SoftwareStartConv(ADC1);
     break;
     
     
     //АЦП завершило работу  
   case ADC_DONE:
-    MainDataStruct.eADC_status = ADC_COMPLITE;
+    MainDataStruct.ADC_status = ADC_COMPLITE;
     ADC_DeInit(ADC1);
     //TIM1_DeInit();
-    //ADC_VrefintCmd(DISABLE);
+    ADC_VrefintCmd(DISABLE);
     GPIO_WriteBit(GPIOF, GPIO_Pin_0, RESET);
+    M_POWER_OFF();
+     CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,DISABLE); //Включим тактирование АЦП
     ADC_DSM_state = READY_TO_SUSPEND;
     //ADC_DSM_state = GET_SENSOR_VALUE;
     
     break;
     //-----------------------------------------------------------------------------------------    
   case GET_SENSOR_VALUE:
+    CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,ENABLE); //Включим тактирование АЦП
     CLK_PeripheralClockConfig(CLK_Peripheral_TIM1,ENABLE); //Включим тактирование таймера 1
     /*Настроим по отдельности два вывхода таймера. Я не использую инвертированный выход тк он занят дисплеем
     придется дергать полярности двумя разными выходами
@@ -324,7 +329,8 @@ void ADC_DSM (void)
     if((ppm == MEASURE_SAMPLES_SENSOR) && (npm == MEASURE_SAMPLES_SENSOR))
     {
       ADC1->CR1 &= ~0x10;
-      
+      TIM1->CNTRH = 0x01;
+      TIM1->CNTRL = 0x01;
       pre_sensor_p/=ppm;
       pre_sensor_n/=npm;
       MainDataStruct.car_level = (pre_sensor_n - pre_sensor_p)-MainDataStruct.zero_level;
@@ -352,10 +358,12 @@ void ADC_DSM (void)
     pre_sensor_n = 0;
     ppm = 0;
     npm = 0;
-    MainDataStruct.eADC_status = ADC_COMPLITE;
+    MainDataStruct.ADC_status = ADC_COMPLITE;
     ADC_DeInit(ADC1);
     TIM1_DeInit();
     ADC_VrefintCmd(DISABLE);
+    CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,DISABLE); //Включим тактирование АЦП
+    CLK_PeripheralClockConfig(CLK_Peripheral_TIM1,DISABLE); //Включим тактирование таймера 1
     ADC_DSM_state = READY_TO_SUSPEND;
     break; 
     break;

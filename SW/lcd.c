@@ -38,9 +38,9 @@ LCD_VoltageSource_Internal);
 LCD_PortMaskConfig(LCD_PortMaskRegister_0, 0xff);
 LCD_PortMaskConfig(LCD_PortMaskRegister_1,0xff);
 LCD_PortMaskConfig(LCD_PortMaskRegister_2,0x03);
-LCD_PulseOnDurationConfig(LCD_PulseOnDuration_3);
+LCD_PulseOnDurationConfig(LCD_PulseOnDuration_1);
 LCD_Cmd(ENABLE);
-LCD_ContrastConfig(LCD_Contrast_Level_6);
+LCD_ContrastConfig(LCD_Contrast_Level_5);
 
 };
 

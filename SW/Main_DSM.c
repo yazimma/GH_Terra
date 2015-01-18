@@ -1,4 +1,4 @@
-#define delay_scrool()  for(uint16_t y=0;y<50000;y++){asm("NOP");}
+#define delay_scrool()  for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};}
 #define delay_key_counter() for(uint16_t y=0;y<1000;y++){asm("NOP");}
 #include "stm8l15x.h"
 #include "main.h"
@@ -32,6 +32,7 @@ extern tsSystemTime SystemTime;
 static uint16_t old_max_level = 32000;
 static uint16_t old_min_level = 32000;
 extern uint16_t old_car_level;
+extern uint16_t level_lcd_blinc_count;
 uint8_t scrool;
 //uint16_t* setup_pointer[3];
 
@@ -159,12 +160,14 @@ case TERRA_STANDBY:
         up_key_counter = 0;
         MainDataStruct.temporary_manual_mode = 1;
         Main_DSM_status = TERRA_VALVE_OPEN;
+        MainDataStruct.up_key_pressed = 0;
       };
     }
   }
     else
     {
     up_key_counter = 0;
+     MainDataStruct.up_key_pressed = 0;
   };
   
   if(DOWN_KEY_PRESSED() && MainDataStruct.down_key_pressed)
@@ -184,11 +187,13 @@ case TERRA_STANDBY:
         SystemTime.auto_return_in_armed_mode = TIMEOUT_FOR_RETURN_IN_ARMED_MODE;
         MainDataStruct.temporary_manual_mode = 1;
         Main_DSM_status = TERRA_VALVE_CLOSE;
+        MainDataStruct.down_key_pressed = 0;
       };
     };
   }
     else
     {
+      MainDataStruct.down_key_pressed = 0;
     down_key_counter = 0;
   };
       //---------------------------------Battary Level Control-------------------------------------
@@ -237,12 +242,14 @@ case TERRA_STANDBY:
        Main_DSM_status = TERRA_VALVE_CLOSE;
      };
    };
-   //Если датчик полива не отключился в течение времени  AUTO_OFF_MANUAL_MODE, то отключить боевой режим и закрыть клапан  
-   if((MainDataStruct.valve_status == VALVE_ON) && (!SystemTime.auto_off_manual_mode_timer))
-   {      
-       Main_DSM_status = TERRA_VALVE_CLOSE;
-       MainDataStruct.armed = DISARMED; 
-   };
+   //==============================================================================================
+   //Если датчик полива не отключился в течение времени  AUTO_OFF_MANUAL_MODE, то отключить боевой режим и закрыть клапан
+   //Исключено по решению заказчика при тестировании Бетта версии
+//   if((MainDataStruct.valve_status == VALVE_ON) && (!SystemTime.auto_off_manual_mode_timer))
+//   {      
+//       Main_DSM_status = TERRA_VALVE_CLOSE;
+//       MainDataStruct.armed = DISARMED; 
+//   };
    //=============================================================================================
 //----------------------------------------------TEMPERATURE_LOCK-----------------------------------
 // Не забыть что NTC резистор !!!!
@@ -306,10 +313,12 @@ case TERRA_STANDBY:
         if (MainDataStruct.armed == ARMED)
         {
           MainDataStruct.armed = DISARMED;
+          MainDataStruct.temporary_manual_mode = 0;
         }
         else 
         {
           MainDataStruct.armed = ARMED;
+          MainDataStruct.temporary_manual_mode = 0;
         };
         Main_DSM_status = TERRA_STANDBY;
         lcd_data_write(LCD_MAX_LEVEL,MainDataStruct.max_level);
@@ -332,11 +341,14 @@ case TERRA_STANDBY:
     case ENTER_SETUP:
       auto_exit_reset();
     ADC_DSM_state = ADC_DEINIT; 
-    lcd_clear_all();
-    blink(ON);
-    lcd_data_write(LCD_MAX_LEVEL,MainDataStruct.max_level);
+    //lcd_clear_all();
+    //blink(ON);
+    //lcd_data_write(LCD_MAX_LEVEL,MainDataStruct.max_level);
     old_max_level = 32000;
     old_min_level = 32000;
+    sim4_clr();   //Выключим значения макс уровня для отклика в переходе на установки макс уровня
+    sim5_clr();
+    sim6_clr();
     Setup_DSM_status = SETUP_TO_MANUAL;
     set_key_counter = 0;
     
@@ -350,6 +362,10 @@ case TERRA_STANDBY:
     {
       auto_exit_reset();
       delay_scrool();
+      level_lcd_blinc_count = 0;
+      MainDataStruct.max_level_lcd_on = 1;
+      //old_max_level = 32000;
+      LCD_update();
       if(MainDataStruct.max_level > MainDataStruct.min_level)
         {
           scrool++;
@@ -375,6 +391,10 @@ case TERRA_STANDBY:
     {
       auto_exit_reset();
       delay_scrool();
+      level_lcd_blinc_count = 0;
+      MainDataStruct.max_level_lcd_on = 1;
+      //old_max_level = 32000;
+      LCD_update();
       if(MainDataStruct.max_level < 999)
       {
         scrool++;
@@ -411,8 +431,8 @@ case TERRA_STANDBY:
         MainDataStruct.set_key_pressed = 0;
         Setup_DSM_status = SETUP_MIN_LEVEL;
         set_key_counter = 0;
-        lcd_clear_all();
-        blink(ON);
+        //lcd_clear_all();
+        //blink(ON);
         lcd_data_write(LCD_MIN_LEVEL,MainDataStruct.min_level);
         while (SET_KEY_PRESSED()){};
       };
@@ -434,6 +454,10 @@ case TERRA_STANDBY:
     {
       auto_exit_reset();
       delay_scrool();
+      level_lcd_blinc_count = 0;
+      MainDataStruct.max_level_lcd_on = 1;
+      MainDataStruct.min_level_lcd_on = 1;
+      LCD_update();
       if(MainDataStruct.min_level > 0) 
         {
           scrool++;
@@ -455,6 +479,10 @@ case TERRA_STANDBY:
     {
       auto_exit_reset();
      delay_scrool();
+     level_lcd_blinc_count = 0;
+      MainDataStruct.max_level_lcd_on = 1;
+      MainDataStruct.min_level_lcd_on = 1;
+      LCD_update();
       if((MainDataStruct.min_level) < MainDataStruct.max_level)
       {
         scrool++;
@@ -713,23 +741,23 @@ case TERRA_STANDBY:
    MainDataStruct.valve_status = VALVE_OFF;
    M_POWER_ON();
    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
    VALVE_RESET();
    M_POWER_OFF();
    Main_DSM_status = TERRA_STANDBY; 
@@ -741,23 +769,25 @@ case TERRA_STANDBY:
    SystemTime.auto_off_manual_mode_timer = AUTO_OFF_MANUAL_MODE;
    M_POWER_ON();
    VALVE_OPEN();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_OPEN();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_OPEN();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_OPEN();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_OPEN();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
+
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_OPEN();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_OPEN();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_OPEN();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_OPEN();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
    VALVE_RESET();
    M_POWER_OFF();
    Main_DSM_status = TERRA_STANDBY; 
