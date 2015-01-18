@@ -16809,15 +16809,6 @@ General-purpose diode for high-speed switching</description>
 </net>
 <net name="MCC" class="0">
 <segment>
-<pinref part="Q6" gate="G$1" pin="B"/>
-<wire x1="7.62" y1="-139.7" x2="10.16" y2="-139.7" width="0.1524" layer="91"/>
-<pinref part="Q7" gate="G$1" pin="C"/>
-<wire x1="10.16" y1="-139.7" x2="10.16" y2="-142.24" width="0.1524" layer="91"/>
-<pinref part="R15" gate="G$1" pin="2"/>
-<wire x1="12.7" y1="-139.7" x2="10.16" y2="-139.7" width="0.1524" layer="91"/>
-<junction x="10.16" y="-139.7"/>
-</segment>
-<segment>
 <pinref part="U1" gate="G$1" pin="PD7"/>
 <wire x1="91.44" y1="20.32" x2="121.92" y2="20.32" width="0.1524" layer="91"/>
 <label x="121.92" y="20.32" size="1.016" layer="95" xref="yes"/>
@@ -17084,6 +17075,17 @@ General-purpose diode for high-speed switching</description>
 <pinref part="U1" gate="G$1" pin="PB7/LCD_SEG17/ADC1_IN11/COMP1_INP"/>
 <pinref part="LCD1" gate="G$1" pin="SEG17"/>
 <wire x1="-83.82" y1="-40.64" x2="-106.68" y2="-40.64" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$35" class="0">
+<segment>
+<pinref part="Q6" gate="G$1" pin="B"/>
+<wire x1="7.62" y1="-139.7" x2="10.16" y2="-139.7" width="0.1524" layer="91"/>
+<pinref part="Q7" gate="G$1" pin="C"/>
+<wire x1="10.16" y1="-139.7" x2="10.16" y2="-142.24" width="0.1524" layer="91"/>
+<pinref part="R15" gate="G$1" pin="2"/>
+<wire x1="12.7" y1="-139.7" x2="10.16" y2="-139.7" width="0.1524" layer="91"/>
+<junction x="10.16" y="-139.7"/>
 </segment>
 </net>
 </nets>

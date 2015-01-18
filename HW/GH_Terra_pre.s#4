@@ -15829,6 +15829,126 @@ General-purpose diode for high-speed switching</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="lcd_glass">
+<packages>
+<package name="CHT2623">
+<wire x1="0" y1="0" x2="56" y2="0" width="0.127" layer="21"/>
+<wire x1="56" y1="0" x2="56" y2="26" width="0.127" layer="21"/>
+<wire x1="56" y1="26" x2="56" y2="28" width="0.127" layer="21"/>
+<wire x1="56" y1="28" x2="49.5" y2="28" width="0.127" layer="21"/>
+<wire x1="49.5" y1="28" x2="49" y2="28" width="0.127" layer="21"/>
+<wire x1="49" y1="28" x2="48.5" y2="28" width="0.127" layer="21"/>
+<wire x1="48.5" y1="28" x2="47.5" y2="28" width="0.127" layer="21"/>
+<wire x1="47.5" y1="28" x2="46.5" y2="28" width="0.127" layer="21"/>
+<wire x1="46.5" y1="28" x2="0" y2="28" width="0.127" layer="21"/>
+<wire x1="0" y1="28" x2="0" y2="26" width="0.127" layer="21"/>
+<wire x1="0" y1="26" x2="0" y2="0" width="0.127" layer="21"/>
+<wire x1="0" y1="26" x2="46.5" y2="26" width="0.127" layer="21"/>
+<wire x1="46.5" y1="26" x2="47.5" y2="26" width="0.127" layer="21"/>
+<wire x1="47.5" y1="26" x2="48.5" y2="26" width="0.127" layer="21"/>
+<wire x1="48.5" y1="26" x2="49" y2="26" width="0.127" layer="21"/>
+<wire x1="49" y1="26" x2="49.5" y2="26" width="0.127" layer="21"/>
+<wire x1="49.5" y1="26" x2="56" y2="26" width="0.127" layer="21"/>
+<smd name="S18" x="49" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S16" x="45" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S15" x="43" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S14" x="41" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S13" x="39" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S12" x="37" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S11" x="35" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S10" x="33" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S9" x="31" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S8" x="29" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S7" x="27" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S6" x="25" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S5" x="23" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S4" x="21" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S3" x="19" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S2" x="17" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S1" x="15" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="C4" x="13" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="C3" x="11" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="C2" x="9" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="C1" x="7" y="27" dx="1.25" dy="2.25" layer="1"/>
+<smd name="S17" x="47" y="27" dx="1.25" dy="2.25" layer="1"/>
+<text x="2" y="23" size="1.27" layer="21">LCD_GLASS</text>
+</package>
+</packages>
+<symbols>
+<symbol name="CHT2623">
+<wire x1="-38.1" y1="27.94" x2="-38.1" y2="12.7" width="0.254" layer="94"/>
+<wire x1="-38.1" y1="12.7" x2="-38.1" y2="0" width="0.254" layer="94"/>
+<wire x1="-38.1" y1="0" x2="78.74" y2="0" width="0.254" layer="94"/>
+<wire x1="78.74" y1="0" x2="78.74" y2="12.7" width="0.254" layer="94"/>
+<wire x1="78.74" y1="12.7" x2="78.74" y2="27.94" width="0.254" layer="94"/>
+<wire x1="78.74" y1="27.94" x2="-38.1" y2="27.94" width="0.254" layer="94"/>
+<pin name="COM1" x="73.66" y="-5.08" length="middle" rot="R90"/>
+<pin name="COM2" x="68.58" y="-5.08" length="middle" rot="R90"/>
+<pin name="COM3" x="63.5" y="-5.08" length="middle" rot="R90"/>
+<pin name="COM4" x="58.42" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG0" x="53.34" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG1" x="48.26" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG2" x="43.18" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG3" x="38.1" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG4" x="33.02" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG5" x="27.94" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG6" x="22.86" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG7" x="17.78" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG8" x="12.7" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG9" x="7.62" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG10" x="2.54" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG11" x="-2.54" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG12" x="-7.62" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG13" x="-12.7" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG14" x="-17.78" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG15" x="-22.86" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG16" x="-27.94" y="-5.08" length="middle" rot="R90"/>
+<pin name="SEG17" x="-33.02" y="-5.08" length="middle" rot="R90"/>
+<wire x1="-38.1" y1="12.7" x2="78.74" y2="12.7" width="0.254" layer="94"/>
+<text x="15.24" y="20.32" size="3.81" layer="94">LCD</text>
+<text x="-33.02" y="15.24" size="1.778" layer="96">&gt;VALUE</text>
+<text x="17.78" y="30.48" size="1.778" layer="95">&gt;NAME</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="CHT2623" prefix="LCD" uservalue="yes">
+<gates>
+<gate name="G$1" symbol="CHT2623" x="-20.32" y="-12.7"/>
+</gates>
+<devices>
+<device name="" package="CHT2623">
+<connects>
+<connect gate="G$1" pin="COM1" pad="C1"/>
+<connect gate="G$1" pin="COM2" pad="C2"/>
+<connect gate="G$1" pin="COM3" pad="C3"/>
+<connect gate="G$1" pin="COM4" pad="C4"/>
+<connect gate="G$1" pin="SEG0" pad="S1"/>
+<connect gate="G$1" pin="SEG1" pad="S2"/>
+<connect gate="G$1" pin="SEG10" pad="S11"/>
+<connect gate="G$1" pin="SEG11" pad="S12"/>
+<connect gate="G$1" pin="SEG12" pad="S13"/>
+<connect gate="G$1" pin="SEG13" pad="S14"/>
+<connect gate="G$1" pin="SEG14" pad="S15"/>
+<connect gate="G$1" pin="SEG15" pad="S16"/>
+<connect gate="G$1" pin="SEG16" pad="S17"/>
+<connect gate="G$1" pin="SEG17" pad="S18"/>
+<connect gate="G$1" pin="SEG2" pad="S3"/>
+<connect gate="G$1" pin="SEG3" pad="S4"/>
+<connect gate="G$1" pin="SEG4" pad="S5"/>
+<connect gate="G$1" pin="SEG5" pad="S6"/>
+<connect gate="G$1" pin="SEG6" pad="S7"/>
+<connect gate="G$1" pin="SEG7" pad="S8"/>
+<connect gate="G$1" pin="SEG8" pad="S9"/>
+<connect gate="G$1" pin="SEG9" pad="S10"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -15913,6 +16033,7 @@ General-purpose diode for high-speed switching</description>
 <part name="R25" library="rcl" deviceset="R-EU_" device="R0603" value="CR0603-FX-1002ELF"/>
 <part name="R26" library="rcl" deviceset="R-EU_" device="R0603" value="CR0603-FX-1002ELF"/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
+<part name="LCD1" library="lcd_glass" deviceset="CHT2623" device="" value="CHT2623"/>
 </parts>
 <sheets>
 <sheet>
@@ -15930,9 +16051,6 @@ General-purpose diode for high-speed switching</description>
 <text x="231.14" y="15.24" size="1.6764" layer="91" rot="R90">UP</text>
 <text x="248.92" y="12.7" size="1.6764" layer="91" rot="R90">DOWN</text>
 <text x="266.7" y="0" size="1.6764" layer="91" rot="R90">VALVE OPEN/CLOSE</text>
-<rectangle x1="-182.88" y1="22.86" x2="-139.7" y2="40.64" layer="91"/>
-<text x="-177.8" y="35.56" size="1.6764" layer="91">LCD</text>
-<text x="-165.1" y="43.18" size="1.6764" layer="91">LCD</text>
 <frame x1="-198.12" y1="-175.26" x2="302.26" y2="88.9" columns="8" rows="5" layer="97"/>
 </plain>
 <instances>
@@ -16119,15 +16237,12 @@ General-purpose diode for high-speed switching</description>
 <instance part="GND16" gate="1" x="271.78" y="-129.54" smashed="yes">
 <attribute name="VALUE" x="269.24" y="-132.08" size="1.778" layer="96"/>
 </instance>
+<instance part="LCD1" gate="G$1" x="-111.76" y="-7.62" smashed="yes" rot="R90">
+<attribute name="VALUE" x="-127" y="-40.64" size="1.778" layer="96" rot="R90"/>
+<attribute name="NAME" x="-121.92" y="76.2" size="1.778" layer="95" rot="R180"/>
+</instance>
 </instances>
 <busses>
-<bus name="BUS1">
-<segment>
-<wire x1="-109.22" y1="68.58" x2="-109.22" y2="-43.18" width="0.762" layer="92"/>
-<wire x1="-109.22" y1="-43.18" x2="-162.56" y2="-43.18" width="0.762" layer="92"/>
-<wire x1="-162.56" y1="-43.18" x2="-162.56" y2="22.86" width="0.762" layer="92"/>
-</segment>
-</bus>
 </busses>
 <nets>
 <net name="GND" class="0">
@@ -16758,8 +16873,8 @@ General-purpose diode for high-speed switching</description>
 <net name="VLCD" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="VLCD"/>
-<wire x1="-83.82" y1="-45.72" x2="-86.36" y2="-45.72" width="0.1524" layer="91"/>
-<label x="-86.36" y="-45.72" size="0.8128" layer="95" rot="R180" xref="yes"/>
+<wire x1="-83.82" y1="-45.72" x2="-101.6" y2="-45.72" width="0.1524" layer="91"/>
+<label x="-101.6" y="-45.72" size="0.8128" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
 <pinref part="C11" gate="G$1" pin="1"/>
@@ -16801,164 +16916,6 @@ General-purpose diode for high-speed switching</description>
 <wire x1="264.16" y1="-81.28" x2="266.7" y2="-81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="LCD_SEG17" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB7/LCD_SEG17/ADC1_IN11/COMP1_INP"/>
-<wire x1="-83.82" y1="-40.64" x2="-109.22" y2="-40.64" width="0.1524" layer="91"/>
-<label x="-93.98" y="-38.1" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_COM0" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PA4/LCD_COM0/"/>
-<wire x1="-83.82" y1="66.04" x2="-109.22" y2="66.04" width="0.1524" layer="91"/>
-<label x="-93.98" y="68.58" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_COM1" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PA5/LCD_COM1"/>
-<wire x1="-83.82" y1="60.96" x2="-96.52" y2="60.96" width="0.1524" layer="91"/>
-<label x="-93.98" y="63.5" size="1.6764" layer="95" rot="R180"/>
-<wire x1="-109.22" y1="60.96" x2="-101.6" y2="60.96" width="0.1524" layer="91"/>
-<wire x1="-101.6" y1="60.96" x2="-96.52" y2="60.96" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="LCD_COM2" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PA6/LCD_COM2"/>
-<wire x1="-83.82" y1="55.88" x2="-109.22" y2="55.88" width="0.1524" layer="91"/>
-<label x="-93.98" y="58.42" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_COM3" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PD1/LCD_COM3"/>
-<wire x1="-83.82" y1="50.8" x2="-99.06" y2="50.8" width="0.1524" layer="91"/>
-<label x="-93.98" y="53.34" size="1.6764" layer="95" rot="R180"/>
-<wire x1="-109.22" y1="50.8" x2="-101.6" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="-101.6" y1="50.8" x2="-99.06" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="LCD_SEG0" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PA7/LCD_SEG0"/>
-<wire x1="-83.82" y1="45.72" x2="-109.22" y2="45.72" width="0.1524" layer="91"/>
-<label x="-93.98" y="48.26" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG1" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PE0/LCD_SEG1"/>
-<wire x1="-83.82" y1="40.64" x2="-109.22" y2="40.64" width="0.1524" layer="91"/>
-<label x="-93.98" y="43.18" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG2" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PE1/TIM1_CH2N/LCD_SEG2"/>
-<wire x1="-83.82" y1="35.56" x2="-109.22" y2="35.56" width="0.1524" layer="91"/>
-<label x="-93.98" y="38.1" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG3" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PE2/TIM1_CH3N/LCD_SEG3"/>
-<wire x1="-83.82" y1="30.48" x2="-109.22" y2="30.48" width="0.1524" layer="91"/>
-<label x="-93.98" y="33.02" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG4" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PE3/LCD_SEG4"/>
-<wire x1="-83.82" y1="25.4" x2="-109.22" y2="25.4" width="0.1524" layer="91"/>
-<label x="-93.98" y="27.94" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG5" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PE4/LCD_SEG5"/>
-<wire x1="-83.82" y1="20.32" x2="-109.22" y2="20.32" width="0.1524" layer="91"/>
-<label x="-93.98" y="22.86" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG6" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PE5/LCD_SEG6/ADC1_IN23/COMP2_INP/COMP1_INP"/>
-<wire x1="-83.82" y1="15.24" x2="-109.22" y2="15.24" width="0.1524" layer="91"/>
-<label x="-93.98" y="17.78" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG7" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PD0/TIM3_CH2/LCD_SEG7/ADC1_IN22/COMP2_INP/COMP1_INP"/>
-<wire x1="-83.82" y1="10.16" x2="-109.22" y2="10.16" width="0.1524" layer="91"/>
-<label x="-93.98" y="12.7" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG8" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PD2/TIM1_CH1/LCD_SEG8/ADC1_IN20/COMP1_INP"/>
-<wire x1="-83.82" y1="5.08" x2="-109.22" y2="5.08" width="0.1524" layer="91"/>
-<label x="-93.98" y="7.62" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG9" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PD3/TIM1_ETR/LCD_SEG9/ADC1_IN19/COMP1_INP"/>
-<wire x1="-83.82" y1="0" x2="-109.22" y2="0" width="0.1524" layer="91"/>
-<label x="-93.98" y="2.54" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG10" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB0/TIM2_CH1/LCD_SEG10/ADC1_IN18/COMP1_INP"/>
-<wire x1="-83.82" y1="-5.08" x2="-109.22" y2="-5.08" width="0.1524" layer="91"/>
-<label x="-93.98" y="-2.54" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG11" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB1/TIM3_CH1/LCD_SEG11/ADC1_IN17/COMP1_INP"/>
-<wire x1="-83.82" y1="-10.16" x2="-109.22" y2="-10.16" width="0.1524" layer="91"/>
-<label x="-93.98" y="-7.62" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG12" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB2/TIM2_CH2/LCD_SEG12/ADC1_IN16/COMP1_INP"/>
-<wire x1="-83.82" y1="-15.24" x2="-109.22" y2="-15.24" width="0.1524" layer="91"/>
-<label x="-93.98" y="-12.7" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG13" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB3/TIM2_ETR/LCD_SEG13/ADC1_IN15/COMP1_INP"/>
-<wire x1="-83.82" y1="-20.32" x2="-109.22" y2="-20.32" width="0.1524" layer="91"/>
-<label x="-93.98" y="-17.78" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG14" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB4/LCD_SEG14/ADC1_IN14/COMP1_INP"/>
-<wire x1="-83.82" y1="-25.4" x2="-109.22" y2="-25.4" width="0.1524" layer="91"/>
-<label x="-93.98" y="-22.86" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG15" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB5/LCD_SEG15/AD1_IN13/COMP1_INP"/>
-<wire x1="-83.82" y1="-30.48" x2="-109.22" y2="-30.48" width="0.1524" layer="91"/>
-<label x="-93.98" y="-27.94" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
-<net name="LCD_SEG16" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PB6/LCD_SEG16/ADC1_IN12/COMP1_INP"/>
-<wire x1="-83.82" y1="-35.56" x2="-109.22" y2="-35.56" width="0.1524" layer="91"/>
-<label x="-93.98" y="-33.02" size="1.6764" layer="95" rot="R180"/>
-</segment>
-</net>
 <net name="VREF-" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="VSS1/VSSA/VREF-"/>
@@ -16973,6 +16930,160 @@ General-purpose diode for high-speed switching</description>
 <junction x="271.78" y="-116.84"/>
 <wire x1="271.78" y1="-116.84" x2="269.24" y2="-116.84" width="0.1524" layer="91"/>
 <pinref part="R26" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="COM1"/>
+<pinref part="U1" gate="G$1" pin="PA4/LCD_COM0/"/>
+<wire x1="-106.68" y1="66.04" x2="-83.82" y2="66.04" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PA5/LCD_COM1"/>
+<pinref part="LCD1" gate="G$1" pin="COM2"/>
+<wire x1="-83.82" y1="60.96" x2="-106.68" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$9" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="COM3"/>
+<pinref part="U1" gate="G$1" pin="PA6/LCD_COM2"/>
+<wire x1="-106.68" y1="55.88" x2="-83.82" y2="55.88" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$10" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD1/LCD_COM3"/>
+<pinref part="LCD1" gate="G$1" pin="COM4"/>
+<wire x1="-83.82" y1="50.8" x2="-106.68" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$11" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG0"/>
+<pinref part="U1" gate="G$1" pin="PA7/LCD_SEG0"/>
+<wire x1="-106.68" y1="45.72" x2="-83.82" y2="45.72" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PE0/LCD_SEG1"/>
+<pinref part="LCD1" gate="G$1" pin="SEG1"/>
+<wire x1="-83.82" y1="40.64" x2="-106.68" y2="40.64" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$13" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG2"/>
+<pinref part="U1" gate="G$1" pin="PE1/TIM1_CH2N/LCD_SEG2"/>
+<wire x1="-106.68" y1="35.56" x2="-83.82" y2="35.56" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$14" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PE2/TIM1_CH3N/LCD_SEG3"/>
+<pinref part="LCD1" gate="G$1" pin="SEG3"/>
+<wire x1="-83.82" y1="30.48" x2="-106.68" y2="30.48" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$15" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG4"/>
+<pinref part="U1" gate="G$1" pin="PE3/LCD_SEG4"/>
+<wire x1="-106.68" y1="25.4" x2="-83.82" y2="25.4" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$16" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG5"/>
+<pinref part="U1" gate="G$1" pin="PE4/LCD_SEG5"/>
+<wire x1="-106.68" y1="20.32" x2="-83.82" y2="20.32" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$17" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PE5/LCD_SEG6/ADC1_IN23/COMP2_INP/COMP1_INP"/>
+<pinref part="LCD1" gate="G$1" pin="SEG6"/>
+<wire x1="-83.82" y1="15.24" x2="-106.68" y2="15.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$18" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG7"/>
+<pinref part="U1" gate="G$1" pin="PD0/TIM3_CH2/LCD_SEG7/ADC1_IN22/COMP2_INP/COMP1_INP"/>
+<wire x1="-106.68" y1="10.16" x2="-83.82" y2="10.16" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$19" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD2/TIM1_CH1/LCD_SEG8/ADC1_IN20/COMP1_INP"/>
+<pinref part="LCD1" gate="G$1" pin="SEG8"/>
+<wire x1="-83.82" y1="5.08" x2="-106.68" y2="5.08" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$20" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG9"/>
+<pinref part="U1" gate="G$1" pin="PD3/TIM1_ETR/LCD_SEG9/ADC1_IN19/COMP1_INP"/>
+<wire x1="-106.68" y1="0" x2="-83.82" y2="0" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$21" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PB0/TIM2_CH1/LCD_SEG10/ADC1_IN18/COMP1_INP"/>
+<pinref part="LCD1" gate="G$1" pin="SEG10"/>
+<wire x1="-83.82" y1="-5.08" x2="-106.68" y2="-5.08" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$22" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG11"/>
+<pinref part="U1" gate="G$1" pin="PB1/TIM3_CH1/LCD_SEG11/ADC1_IN17/COMP1_INP"/>
+<wire x1="-106.68" y1="-10.16" x2="-83.82" y2="-10.16" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$23" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PB2/TIM2_CH2/LCD_SEG12/ADC1_IN16/COMP1_INP"/>
+<pinref part="LCD1" gate="G$1" pin="SEG12"/>
+<wire x1="-83.82" y1="-15.24" x2="-106.68" y2="-15.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$24" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG13"/>
+<pinref part="U1" gate="G$1" pin="PB3/TIM2_ETR/LCD_SEG13/ADC1_IN15/COMP1_INP"/>
+<wire x1="-106.68" y1="-20.32" x2="-83.82" y2="-20.32" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$25" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG14"/>
+<pinref part="U1" gate="G$1" pin="PB4/LCD_SEG14/ADC1_IN14/COMP1_INP"/>
+<wire x1="-106.68" y1="-25.4" x2="-83.82" y2="-25.4" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$26" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PB5/LCD_SEG15/AD1_IN13/COMP1_INP"/>
+<pinref part="LCD1" gate="G$1" pin="SEG15"/>
+<wire x1="-83.82" y1="-30.48" x2="-106.68" y2="-30.48" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$29" class="0">
+<segment>
+<pinref part="LCD1" gate="G$1" pin="SEG16"/>
+<pinref part="U1" gate="G$1" pin="PB6/LCD_SEG16/ADC1_IN12/COMP1_INP"/>
+<wire x1="-106.68" y1="-35.56" x2="-83.82" y2="-35.56" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$34" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PB7/LCD_SEG17/ADC1_IN11/COMP1_INP"/>
+<pinref part="LCD1" gate="G$1" pin="SEG17"/>
+<wire x1="-83.82" y1="-40.64" x2="-106.68" y2="-40.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
