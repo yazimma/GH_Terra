@@ -94,7 +94,7 @@ if( SystemTime.sensor_get_time == SystemTime.adc_get_time)   //Чтобы не совпадал
   SystemTime.sensor_get_time+=2;
   SystemTime.adc_get_time+=4;
 };
-MainDataStruct.ready_to_suspend = 0;
+MainDataStruct.ready_to_suspend = FALSE;
 RTC_ClearITPendingBit(RTC_IT_WUT);
 }
 

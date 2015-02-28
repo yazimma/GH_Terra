@@ -26,7 +26,7 @@
 #define STEPS_BEFOR_FAST_STEP 10
 //Задержка клавиши SET
 #define SET_KEY_DELAY 40000
-#define SET_KEY_DELAY_IN_MENU 2000
+#define SET_KEY_DELAY_IN_MENU 5000
 //Задержка клавиши VALVE
 #define VALVE_KEY_DELAY 30000
 //Защитный интервал клавиши SET

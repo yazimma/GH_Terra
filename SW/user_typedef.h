@@ -2,10 +2,10 @@
 
 #ifndef __USER_TYPEDEF_H__
 #define __USER_TYPEDEF_H__
-#define SET_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_6)
+#define SET_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0)
 #define UP_KEY_PRESSED()  !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_5)
 #define DOWN_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1)
-#define VALVE_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0)
+#define VALVE_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_6)
 #define M_POWER_ON()  GPIO_WriteBit(GPIOD, GPIO_Pin_7,SET);
 #define M_POWER_OFF() GPIO_WriteBit(GPIOD, GPIO_Pin_7,RESET);
 #define VALVE_CLOSE() {GPIO_WriteBit(GPIOE, GPIO_Pin_7,SET);\

@@ -303,12 +303,12 @@ void IO_init(void)
   GPIO_Init(GPIOE,0x3f,GPIO_Mode_Out_PP_Low_Slow); 
   //-----------------------------------------------
   //Key
-  GPIO_Init(GPIOC,0x63,GPIO_Mode_In_FL_IT);
+  GPIO_Init(GPIOC,0x23,GPIO_Mode_In_FL_IT);
   //Преывания по кнопкам
   EXTI_SetPinSensitivity(EXTI_Pin_0,EXTI_Trigger_Falling);//_Low
   EXTI_SetPinSensitivity(EXTI_Pin_1,EXTI_Trigger_Falling);//_Low
   EXTI_SetPinSensitivity(EXTI_Pin_5,EXTI_Trigger_Falling);//_Low
-  EXTI_SetPinSensitivity(EXTI_Pin_6,EXTI_Trigger_Falling);//_Low
+ // EXTI_SetPinSensitivity(EXTI_Pin_6,EXTI_Trigger_Falling);//_Low
   enableInterrupts();
   //-----------------------------------------------
   //VALVE
@@ -317,6 +317,7 @@ void IO_init(void)
   //Internal connections
   GPIO_Init(GPIOD,0x80,GPIO_Mode_Out_PP_Low_Slow); 
   GPIO_Init(GPIOF,0x01,GPIO_Mode_Out_PP_Low_Slow);
+  //GPIO_Init(GPIOC,0x64,GPIO_Mode_Out_PP_Low_Slow);
   //------------------------------------------------
   //ADC
   GPIO_Init(GPIOD,0x40,GPIO_Mode_In_FL_No_IT);

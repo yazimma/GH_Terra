@@ -12,7 +12,7 @@
 *
 */
 #define Freq 1000
-#define MEASURE_SAMPLES_SENSOR 4
+#define MEASURE_SAMPLES_SENSOR 5
 #define CONVERSION_SAMPLES 8
 #define Vref 3000
 //#define Vrefint 1224
@@ -36,6 +36,7 @@ tStateMashine_status ADC_DSM_state;
 extern tMainDataStruct MainDataStruct;
 
 static char indx;
+static char ind_n,ind_p;
 uint32_t akkum;
 uint32_t pre_battary_level;
 uint32_t pre_temperature;
@@ -56,37 +57,24 @@ INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_COM_IRQHandler, 23)
   if(i)
   {
     chanel = SENSOR_NP;
-    //GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
-    //ADC_Cmd(ADC1,DISABLE);
     ADC_ChannelCmd(ADC1,ADC_Channel_4, DISABLE);
-    //GPIOC->DDR |=(1<<4);
-    //GPIOC->DDR &=(~(1<<7));
     ADC_ChannelCmd(ADC1,ADC_Channel_3, ENABLE);
-    // ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
     ADC1->CR1 |= 0x10;  
     ADC_Cmd(ADC1,ENABLE);
-    //   GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
-    //for(uint16_t l=0;l<10ul;l++){asm("NOP");};
-    //   GPIO_WriteBit(GPIOF, GPIO_Pin_0, RESET);
     i=FALSE;
     indx=1;
+    GPIO_WriteBit(GPIOD, GPIO_Pin_7, SET);
   }
   else
   {     
     chanel = SENSOR_PP;
-    //GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
-    //ADC_Cmd(ADC1,DISABLE);
     ADC_ChannelCmd(ADC1,ADC_Channel_3, DISABLE);
-    //GPIOC->DDR |=(1<<7);
-    //GPIOC->DDR &=(~(1<<4));
     ADC_ChannelCmd(ADC1,ADC_Channel_4, ENABLE);
-    //ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
     ADC1->CR1 |= 0x10;
     ADC_Cmd(ADC1,ENABLE);
     i=TRUE;
-    indx=1;
+   indx=1;
   };
-  //for(uint16_t l=0;l<10000ul;l++){asm("NOP");};
   ADC_SoftwareStartConv(ADC1);  
   TIM1_ClearITPendingBit(TIM1_IT_Update);
 }
@@ -103,12 +91,13 @@ INTERRUPT_HANDLER(TIM1_CC_IRQHandler, 24)
 INTERRUPT_HANDLER(ADC1_COMP_IRQHandler, 18)
 {
   //RTC_ITConfig(RTC_IT_WUT,DISABLE);
+  
   if (indx != 0)
   {
-    akkum+=ADC_GetConversionValue(ADC1);
-    mes_n[indx] = ADC_GetConversionValue(ADC1);
+    akkum += ADC_GetConversionValue(ADC1);
+    //mes_n[ind] = ADC_GetConversionValue(ADC1);
   };
-  
+      GPIO_WriteBit(GPIOD, GPIO_Pin_7, RESET);
   indx++;
   
   if(indx >= conversion_samples+1)
@@ -143,26 +132,27 @@ INTERRUPT_HANDLER(ADC1_COMP_IRQHandler, 18)
       break;
       
     case SENSOR_PP:
+     
       if (ppm != MEASURE_SAMPLES_SENSOR)
       { 
-        
         ppm++;
-        
         pre_sensor_p+=(uint16_t)akkum;
+          mes_n[ind_n++] = (uint16_t)akkum;
         akkum = 0;
+       
       };
-      
+       
       break;
       
     case SENSOR_NP:
       if (npm != MEASURE_SAMPLES_SENSOR)
       { 
-        
         npm++;
         
         pre_sensor_n+=(uint16_t)akkum;
         akkum = 0;
-      };
+        };  
+      
       break;
       
       
@@ -326,16 +316,20 @@ void ADC_DSM (void)
     ADC_DSM_state = WAIT_SENSOD_DATA;
     break;
   case WAIT_SENSOD_DATA:
-    if((ppm == MEASURE_SAMPLES_SENSOR) && (npm == MEASURE_SAMPLES_SENSOR))
+    if((ppm >= MEASURE_SAMPLES_SENSOR) && (npm >= MEASURE_SAMPLES_SENSOR))
     {
       ADC1->CR1 &= ~0x10;
       TIM1->CNTRH = 0x01;
       TIM1->CNTRL = 0x01;
-      pre_sensor_p/=ppm;
+       pre_sensor_p -= mes_n[0];
+      pre_sensor_p/=ppm-1;
       pre_sensor_n/=npm;
+      
       MainDataStruct.car_level = (pre_sensor_n - pre_sensor_p)-MainDataStruct.zero_level;
       if (MainDataStruct.car_level > 5000)
-      {   
+      {  
+        
+        
 //        MainDataStruct.car_level = (((pre_sensor_n - pre_sensor_p)));
 //        
 //      }
@@ -345,6 +339,7 @@ void ADC_DSM (void)
         
       };
       ADC_DSM_state = ADC_DEINIT;
+       ind_n = 0;
     };
     break;
   case ADC_DEINIT:

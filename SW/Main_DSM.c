@@ -1,5 +1,5 @@
 #define delay_scrool()  for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};}
-#define delay_key_counter() for(uint16_t y=0;y<1000;y++){asm("NOP");}
+#define delay_key_counter() for(uint16_t y=0;y<8000;y++){asm("NOP");}
 #include "stm8l15x.h"
 #include "main.h"
 #include "usart_debug.h"
