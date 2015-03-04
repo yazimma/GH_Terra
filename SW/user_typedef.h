@@ -28,6 +28,9 @@ __no_init uint16_t ee_zero_level;
 __no_init uint16_t ee_max_level;
 #pragma location = 0x1030
 __no_init uint16_t ee_min_level;
+#pragma location = 0x1040
+__no_init uint32_t ee_watering_protect_interval;
+
 
 //----------------------------END_OF_EEPROM---------------------------------------------
 
@@ -63,6 +66,7 @@ INIT,
   ENTER_SERVICE_MENU,
   SETUP_TEMP_LEVEL,
   SETUP_ZERO_LEVEL,
+  SETUP_PROT_INTERVAL,
   SETUP_SERVISE_EXIT,
   SETUP_TO_MANUAL,
 }tStateMashine_status;
@@ -119,6 +123,7 @@ typedef struct {
   uint16_t battary_level;
   uint16_t sensor;
   uint16_t zero_level;
+  uint32_t watering_protect_interval;
   bool ready_to_suspend;
   enum {
     ADC_BUSY,
@@ -138,6 +143,8 @@ typedef struct {
   uint32_t auto_return_in_armed_mode;
   uint32_t off_fast_mode;
   uint32_t exe_mode_off;
+  uint32_t key_no_pressed_time;
+  uint32_t protect_interval;
 }tsSystemTime;
 
 typedef enum{

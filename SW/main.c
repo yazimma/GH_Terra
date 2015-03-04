@@ -92,6 +92,7 @@ INTERRUPT_HANDLER(EXTI0_IRQHandler, 8)  //Кнопка SET
   SystemTime.off_fast_mode = FAST_MODE_DUTY;
   SystemTime.sensor_get_time = 0;
 };
+SystemTime.key_no_pressed_time = 0;
 MainDataStruct.set_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin0);
 }
@@ -105,7 +106,7 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)  //Кнопка Down
   SystemTime.off_fast_mode = FAST_MODE_DUTY;
   SystemTime.sensor_get_time = 0;
 };
-
+SystemTime.key_no_pressed_time = 0;
 MainDataStruct.down_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin1);
 }
@@ -120,22 +121,22 @@ INTERRUPT_HANDLER(EXTI5_IRQHandler, 13) //Кнопка Up
   SystemTime.off_fast_mode = FAST_MODE_DUTY;
   SystemTime.sensor_get_time = 0;
 };
-
+SystemTime.key_no_pressed_time = 0;
 MainDataStruct.up_key_pressed = 1;
 EXTI_ClearITPendingBit(EXTI_IT_Pin5);
 }
-INTERRUPT_HANDLER(EXTI6_IRQHandler, 14) //Кнопка Valve
-{
-  MainDataStruct.ready_to_suspend = FALSE;
- if(!MainDataStruct.exe_mode)
-{
-  MainDataStruct.fast_mode = 1;
-  SystemTime.sensor_get_time = 0;
-};
- SystemTime.off_fast_mode = FAST_MODE_DUTY;
-MainDataStruct.set_key_pressed = 1;
-EXTI_ClearITPendingBit(EXTI_IT_Pin6);
-}
+//INTERRUPT_HANDLER(EXTI6_IRQHandler, 14) //Кнопка Valve
+//{
+//  MainDataStruct.ready_to_suspend = FALSE;
+// if(!MainDataStruct.exe_mode)
+//{
+//  MainDataStruct.fast_mode = 1;
+//  SystemTime.sensor_get_time = 0;
+//};
+// SystemTime.off_fast_mode = FAST_MODE_DUTY;
+//MainDataStruct.set_key_pressed = 1;
+//EXTI_ClearITPendingBit(EXTI_IT_Pin6);
+//}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -160,6 +161,7 @@ void main(void)
     ee_zero_level = 250;
     ee_max_level = 800;
     ee_min_level = 400;
+    ee_watering_protect_interval = WATERING_PROTECT_INTERVAL;
     lock_eeprom();
   };
   //Загрузим из EEPROM данные
@@ -168,6 +170,7 @@ void main(void)
   MainDataStruct.max_level = ee_max_level;
   MainDataStruct.min_level = ee_min_level;
   MainDataStruct.ready_to_suspend = FALSE;
+  MainDataStruct.watering_protect_interval = ee_watering_protect_interval;
    __enable_interrupt();
   while (1)
     {
@@ -208,73 +211,9 @@ if (MainDataStruct.ready_to_suspend)
  
 };
 MainDataStruct.ready_to_suspend = TRUE;        
-// if (MainDataStruct.car_level == 0 )
-// {
-//   MainDataStruct.car_level = 1;
-// };      
-      
-#ifdef __DEBUG
     
-    Usart_printString("MAX_L: "); 
-    Usart_printUINT(MainDataStruct.max_level);
-    Usart_printString("| MIN_L: "); 
-    Usart_printUINT(MainDataStruct.min_level);
-    Usart_printString("| CAR_L: "); 
-    Usart_printUINT(MainDataStruct.car_level);
-    //====================================================================
-    Usart_printString("| KEYS-> |"); 
-    if(MainDataStruct.set_key_pressed)
-    {
-      Usart_printString("-@-|");
-    }
-    else
-    {
-      Usart_printString("-O-|");
-    };
-    if(MainDataStruct.up_key_pressed)
-    {
-      Usart_printString("-@-|");
-    }
-    else
-    {
-      Usart_printString("-O-|");
-    };
-    if(MainDataStruct.down_key_pressed)
-    {
-      Usart_printString("-@-|");
-    }
-    else
-    {
-      Usart_printString("-O-|");
-    };
-    if(MainDataStruct.valve_key_pressed)
-    {
-      Usart_printString("-@-|");
-    }
-    else
-    {
-      Usart_printString("-O-|");
-    };
-    //==========================================================================
-    Usart_printString(" Temp: ");
-    Usart_printUINT(MainDataStruct.temperature);
-    Usart_printString("| BAT: ");
-    Usart_printUINT(MainDataStruct.battary_level);
-    Usart_printString("V |");
-    Usart_printString(" Valve status:");
-    if(MainDataStruct.valve_status)
-    {
-      Usart_printString(" OPEN ");
-    }
-    else
-    {
-      Usart_printString(" CLOSE ");
-    };
-    Usart_printString("\r\n");
-#endif //__DEBUG
-    
-    
-    };
+   
+ };
   
 };
 

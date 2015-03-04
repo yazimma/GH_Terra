@@ -17,33 +17,42 @@ INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler, 4)
 //  for(uint16_t l=0;l<10ul;l++){asm("NOP");};
 //  GPIO_WriteBit(GPIOF, GPIO_Pin_0, RESET);
   SystemTime.on_timer++; //Таймер на 136 лет .... Гы!
+  
+  //Вычитатель времени получения данных от датчика влажности
+  
   if (SystemTime.sensor_get_time > 0)
   {
     SystemTime.sensor_get_time--;
   };
+  
+  //Вычитатель времени получения данных  о батареи и температуре.
+  
   if(SystemTime.adc_get_time > 0)
   {
     SystemTime.adc_get_time--;
   };
+  //Вычитатель времени автоматического выхода из меню
   if (SystemTime.auto_exit_setup > 0)
 {
   SystemTime.auto_exit_setup--;
 };
 
-if(Main_DSM_status != TERRA_SETUP)
+
+
+if(Main_DSM_status != TERRA_SETUP) //Если не находимся в режиме установки
 {
-  if (Main_DSM_status != TERRA_SERVISE)
+  if (Main_DSM_status != TERRA_SERVISE) //И если не находимся в сервисном меню
   {
-    if(!SystemTime.adc_get_time)
+    if(!SystemTime.adc_get_time) //Если пришло время измерить температуру и батарею
     {
       SystemTime.adc_get_time = ADC_GET_VALUE_PERIOD;
-      Main_DSM_status = TERRA_MEASURE;
+      Main_DSM_status = TERRA_MEASURE; //Установили состояние автомата
     };
-    if(!SystemTime.sensor_get_time)
+    if(!SystemTime.sensor_get_time)//Если пришло время для измерения влажности
     {
-      if(!MainDataStruct.exe_mode)
+      if(!MainDataStruct.exe_mode) //Перенастройка времени измерения влажности для режима выстовка
       {
-        if(!MainDataStruct.fast_mode)
+        if(!MainDataStruct.fast_mode)//Режим быстрых измерений после нажатия на кнопку. 
         {
           if (MainDataStruct.valve_status == VALVE_ON)
           {
@@ -94,6 +103,12 @@ if( SystemTime.sensor_get_time == SystemTime.adc_get_time)   //Чтобы не совпадал
   SystemTime.sensor_get_time+=2;
   SystemTime.adc_get_time+=4;
 };
+
+//Счетчик времени от последней нажатой клавиши
+SystemTime.key_no_pressed_time++;
+//счетчик времени от последнего полива
+SystemTime.protect_interval++;
+
 MainDataStruct.ready_to_suspend = FALSE;
 RTC_ClearITPendingBit(RTC_IT_WUT);
 }
