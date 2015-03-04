@@ -36,7 +36,7 @@ tStateMashine_status ADC_DSM_state;
 extern tMainDataStruct MainDataStruct;
 
 static char indx;
-static char ind_n,ind_p;
+static char ind_n;
 uint32_t akkum;
 uint32_t pre_battary_level;
 uint32_t pre_temperature;
