@@ -1,5 +1,9 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
+//SoftWare_version
+#define SOFT_WERSION 12
+//LOCK       3600 = 1 h
+#define LOCK_IN 86400
 //-========WakeUP Config===================--
 //1162 = 1s
 #define MAIN_PERIOD 1162
@@ -16,7 +20,9 @@
 #define AUTO_OFF_MANUAL_MODE 3600
 #define TIMEOUT_FOR_RETURN_IN_ARMED_MODE 30
 #define BLOW_COUNT_PERIOD_BLINK 10000
+#define VALV_COUNT_PERIOD_BLINK 5000
 #define LEVEL_LCD_BLINC_PERIOD 4000
+
 
 //Температура блокировки в сопротивлении термистора на температурах
 //18300 = 10 C ; 12161 = 20; 22649 = 5; 28222 = 0;
@@ -25,6 +31,8 @@
 #define WATERING_PROTECT_INTERVAL 1
 //Время после нажатия клавиши до включения защитного интервала sec
 #define NO_PRESSED_KEY_PROTECT_INTERVAL_VALID 600
+//циклов работы мотора до включения индикатора ошибки клапана
+#define ERROR_VALVE_PERIOD_COUNT 100000
 //---------------------------------KEYS_CONFIG_PARAM----------------------------------------------
 //Шагов до быстрой прокрутки для клавиш вверх/вниз 
 #define STEPS_BEFOR_FAST_STEP 10

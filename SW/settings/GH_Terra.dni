@@ -9,11 +9,33 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1406789197
+Checksum=-1358268325
 [CallStack]
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[SfrWindow]
+Show=1 1
+Sort=4 0
+[watch_formats]
+Fmt0={W}0:V90_msb	4	0
+Fmt1={W}0:ind_n	3	0
+Fmt2={W}0:npm	3	0
+Fmt3={W}0:ppm	3	0
+[DataSample]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Breakpoints]
+Count=0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -38,31 +60,9 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Trace1]
-Enabled=0
-ShowSource=1
-[watch_formats]
-Fmt0={W}0:V90_msb	4	0
-Fmt1={W}0:ind_n	3	0
-Fmt2={W}0:npm	3	0
-Fmt3={W}0:ppm	3	0
-[DataSample]
-LogEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[SfrWindow]
-Show=1 1
-Sort=4 0
-[Breakpoints]
-Count=0
 [Aliases]
 Count=0
 SuppressDialog=0
+[Trace1]
+Enabled=0
+ShowSource=1

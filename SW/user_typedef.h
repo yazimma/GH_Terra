@@ -13,9 +13,18 @@
 
 #define VALVE_OPEN()    {GPIO_WriteBit(GPIOE, GPIO_Pin_6,SET);\
                         GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}
-
+ //GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);
 #define VALVE_RESET()   {GPIO_WriteBit(GPIOE, GPIO_Pin_6,RESET);\
-                        GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}
+                        GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);\
+GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
+
+#define VALVE_SENSOR_ON() {GPIO_WriteBit(GPIOA, GPIO_Pin_3,SET);}
+
+#define VALVE_SENSOR_OFF() {GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
+ 
+#define VALVE_SENSOR_OPEN() !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7)
+#define VALVE_SENSOR_CLOSE() GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7)
+
 #define unlock_eeprom() {FLASH_Unlock(FLASH_MemType_Data);}
 #define lock_eeprom()   {FLASH_Lock(FLASH_MemType_Data);}
 //--------------------------EEPROM------------------------------------------------------
@@ -30,6 +39,10 @@ __no_init uint16_t ee_max_level;
 __no_init uint16_t ee_min_level;
 #pragma location = 0x1040
 __no_init uint32_t ee_watering_protect_interval;
+#pragma location = 0x1050
+__no_init uint8_t ee_sw_lock;
+
+
 
 
 //----------------------------END_OF_EEPROM---------------------------------------------
@@ -70,6 +83,17 @@ INIT,
   SETUP_SERVISE_EXIT,
   SETUP_TO_MANUAL,
 }tStateMashine_status;
+
+typedef enum {
+  
+  MOTOR_NO_INIT = 0,
+  M_CLOSE,
+  M_OPEN,
+  GO_TO_CLOSE,
+  GO_TO_OPEN,
+  M_READY,
+  
+}t_motor_DSM;
 
 typedef enum {
   MAX,
@@ -116,6 +140,7 @@ typedef struct {
   unsigned min_level_lcd_on:1;
   unsigned fast_mode:1;
   unsigned exe_mode:1;
+  uint8_t sw_unlocked;
   teValveStatus armed;
   teBattaryLevel battary_status;
   int16_t temperature;
@@ -125,6 +150,9 @@ typedef struct {
   uint16_t zero_level;
   uint32_t watering_protect_interval;
   bool ready_to_suspend;
+  t_motor_DSM valve_state;
+  bool valve_command_done;
+  bool valve_error;
   enum {
     ADC_BUSY,
     ADC_IDLE,

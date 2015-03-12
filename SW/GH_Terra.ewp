@@ -1669,6 +1669,9 @@
     <name>$PROJ_DIR$\Main_DSM.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\motor_DSM.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\stm8l15x_conf.h</name>
   </file>
   <file>

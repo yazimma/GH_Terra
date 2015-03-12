@@ -21,6 +21,7 @@
 #include "user_typedef.h"
 #include "adc.h"
 #include "Main_DSM.h"
+#include "motor_DSM.h"
 #include "lcd.h"
 #include "system_time.h"
 #include "configuration.h"
@@ -37,8 +38,8 @@ extern tStateMashine_status Main_DSM_status;
 extern tStateMashine_status Setup_DSM_status;
 extern tsSystemTime SystemTime;
 extern uint8_t scrool;
-
-
+extern t_motor_DSM motor_DSM_state;
+bool u = FALSE;
 static uint16_t old_max_level;
 static uint16_t old_min_level;
 uint16_t old_car_level;
@@ -46,6 +47,7 @@ static teBattaryLevel old_battary_status;
 static teValveStatus old_valve_status;
 static teValveStatus old_arm_status; 
 uint16_t blow_count;
+uint16_t valv_count;
 bool Go = FALSE;
 //---------------------------------Прототипы функций----------------------------------------------
 void clock_init (void);
@@ -162,8 +164,24 @@ void main(void)
     ee_max_level = 800;
     ee_min_level = 400;
     ee_watering_protect_interval = WATERING_PROTECT_INTERVAL;
+    ee_sw_lock = 0x00;
     lock_eeprom();
   };
+  if(UP_KEY_PRESSED() && DOWN_KEY_PRESSED())
+  {
+     unlock_eeprom();
+     ee_sw_lock = 0xAA;
+     
+     lock_eeprom();
+     for (int sw = 0; sw != SOFT_WERSION;sw++)
+     {
+       lcd_data_write(LCD_CAR_LEVEL,sw);
+       for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};};        
+     };
+      for(uint16_t y=0;y<30000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};}; 
+           
+  };
+  
   //Загрузим из EEPROM данные
   MainDataStruct.lock_temperature = ee_lock_temperature;
   MainDataStruct.zero_level = ee_zero_level;
@@ -171,13 +189,36 @@ void main(void)
   MainDataStruct.min_level = ee_min_level;
   MainDataStruct.ready_to_suspend = FALSE;
   MainDataStruct.watering_protect_interval = ee_watering_protect_interval;
+  MainDataStruct.sw_unlocked = ee_sw_lock;
    __enable_interrupt();
+   if(MainDataStruct.sw_unlocked == 0xCC)
+   {
+      blink(ON);
+      lcd_bat_level(CRITICAL);
+      while(1){};
+     
+   };
   while (1)
     {
       
       
       Main_DSM ();
       ADC_DSM ();
+      motor_DSM ();
+      
+      if(MainDataStruct.sw_unlocked != 0xAA)
+      {
+        if(SystemTime.on_timer >= LOCK_IN)
+        {
+          unlock_eeprom();
+          ee_sw_lock = 0xCC;
+          lock_eeprom();
+          blink(ON);
+          lcd_bat_level(CRITICAL);
+          while(1){};
+          
+        };
+      };
 
         if(Main_DSM_status != TERRA_SERVISE)
         {
@@ -252,9 +293,12 @@ void IO_init(void)
   //-----------------------------------------------
   //VALVE
   GPIO_Init(GPIOE,0xC0,GPIO_Mode_Out_PP_Low_Slow);
+  //Valve Sensor
+  GPIO_Init(GPIOA,0x08,GPIO_Mode_Out_PP_Low_Slow);
+  GPIO_Init(GPIOD,0x80,GPIO_Mode_In_FL_No_IT);
   //-----------------------------------------------
   //Internal connections
-  GPIO_Init(GPIOD,0x80,GPIO_Mode_Out_PP_Low_Slow); 
+  //GPIO_Init(GPIOD,0x80,GPIO_Mode_Out_PP_Low_Slow); 
   GPIO_Init(GPIOF,0x01,GPIO_Mode_Out_PP_Low_Slow);
   //GPIO_Init(GPIOC,0x64,GPIO_Mode_Out_PP_Low_Slow);
   //------------------------------------------------
@@ -275,7 +319,9 @@ void  DSM_Init(void)
   MainDataStruct.ready_to_suspend = FALSE;
   ADC_DSM_state = READY_TO_SUSPEND;
   Main_DSM_status = TERRA_INIT;
+  motor_DSM_state = MOTOR_NO_INIT;
   MainDataStruct.car_level = 0;
+  MainDataStruct.valve_error = FALSE;
   MainDataStruct.battary_level = 0;
    lcd_bat_level(CRITICAL);
   for(uint16_t l=0;l<TEST_DISPLAY_DELAY;l++){asm("NOP");};
@@ -299,27 +345,27 @@ void  DSM_Init(void)
     MainDataStruct.valve_status = VALVE_OFF;
     MainDataStruct.max_level_lcd_on = 1;
     MainDataStruct.min_level_lcd_on = 1;
-   M_POWER_ON();
-   VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   M_POWER_ON();
+//   VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//   VALVE_RESET();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
+//    VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
    VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-    VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP");};
-   VALVE_RESET();
-   M_POWER_OFF();
+   
    Main_DSM_status = TERRA_STANDBY; 
   
 };
@@ -427,6 +473,46 @@ void LCD_update(void)
    lcd_bat_level(MainDataStruct.battary_status);
     old_battary_status = MainDataStruct.battary_status;
   };
+  //Пробуем мигать краном типа ошибка клапана
+ 
+  if( MainDataStruct.valve_error)
+  {
+    valv_count++;
+    MainDataStruct.temporary_manual_mode = 0;
+    if(valv_count > VALV_COUNT_PERIOD_BLINK)
+   {
+     valv_count = 0;
+      
+      if(u)
+      {
+        
+        lcd_valve(ARMED);
+        
+      }
+      else
+      {
+        
+        lcd_valve(DISARMED);
+        
+      };
+      u = !u;
+    };
+  }
+  else
+  {
+    if (old_arm_status != MainDataStruct.armed) //Кран
+  {
+   lcd_valve(MainDataStruct.armed);
+    old_arm_status = MainDataStruct.armed;
+  };
+  
+    
+    
+  };
+  
+  
+  
+  
   //Пробуем мигать каплей
   if( MainDataStruct.temporary_manual_mode)
   {
@@ -458,11 +544,6 @@ void LCD_update(void)
   };
   
   
-  if (old_arm_status != MainDataStruct.armed) //Кран
-  {
-   lcd_valve(MainDataStruct.armed);
-    old_arm_status = MainDataStruct.armed;
-  };
   
   
     

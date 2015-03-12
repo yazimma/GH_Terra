@@ -790,11 +790,13 @@ case TERRA_STANDBY:
   
   case TERRA_VALVE_CLOSE:
    MainDataStruct.valve_status = VALVE_OFF;
-   //M_POWER_ON();
-   VALVE_CLOSE();
-   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
-   VALVE_RESET();
-   //M_POWER_OFF();
+   MainDataStruct.valve_state = M_CLOSE;
+   MainDataStruct.valve_command_done = FALSE;
+//   //M_POWER_ON();
+//   VALVE_CLOSE();
+//   for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
+//   VALVE_RESET();
+//   //M_POWER_OFF();
    Main_DSM_status = TERRA_STANDBY; 
    SystemTime.protect_interval = 0;
     break;
@@ -807,11 +809,13 @@ case TERRA_STANDBY:
     {
       MainDataStruct.valve_status = VALVE_ON;
       SystemTime.auto_off_manual_mode_timer = AUTO_OFF_MANUAL_MODE;
-      //M_POWER_ON();
-      VALVE_OPEN();
-      for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
-      VALVE_RESET();
-      //M_POWER_OFF();
+      MainDataStruct.valve_state = M_OPEN;
+      MainDataStruct.valve_command_done = FALSE;
+//      //M_POWER_ON();
+//      VALVE_OPEN();
+//      for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
+//      VALVE_RESET();
+//      //M_POWER_OFF();
       Main_DSM_status = TERRA_STANDBY; 
     };
     }
@@ -819,11 +823,13 @@ case TERRA_STANDBY:
     {
       MainDataStruct.valve_status = VALVE_ON;
       SystemTime.auto_off_manual_mode_timer = AUTO_OFF_MANUAL_MODE;
-      //M_POWER_ON();
-      VALVE_OPEN();
-      for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
-      VALVE_RESET();
-      //M_POWER_OFF();
+      MainDataStruct.valve_state = M_OPEN;
+      MainDataStruct.valve_command_done = FALSE;
+//      //M_POWER_ON();
+//      VALVE_OPEN();
+//      for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
+//      VALVE_RESET();
+//      //M_POWER_OFF();
       Main_DSM_status = TERRA_STANDBY; 
     };
       
