@@ -35,13 +35,14 @@ enum {
 tStateMashine_status ADC_DSM_state;
 extern tMainDataStruct MainDataStruct;
 
+uint8_t count_wrong_mesure;
 static char indx;
 static char ind_n;
 uint32_t akkum;
 uint32_t pre_battary_level;
 uint32_t pre_temperature;
 float pre_temp_float;
-uint16_t pre_sensor_p,pre_sensor_n;
+int16_t pre_sensor_p,pre_sensor_n;
 uint8_t conversion_samples;
 uint8_t ppm,npm;
 uint32_t Vrefint;
@@ -325,19 +326,37 @@ void ADC_DSM (void)
       pre_sensor_p/=ppm-1;
       pre_sensor_n/=npm;
       
-      MainDataStruct.car_level = (pre_sensor_n - pre_sensor_p)-MainDataStruct.zero_level;
-      if (MainDataStruct.car_level > 5000)
-      {  
-        
-        
-//        MainDataStruct.car_level = (((pre_sensor_n - pre_sensor_p)));
-//        
-//      }
-//      else 
-//      {
-        MainDataStruct.car_level = 0;
-        
+      if((pre_sensor_n - pre_sensor_p) > 0)
+      {
+        count_wrong_mesure = 0;
+        MainDataStruct.car_level = (pre_sensor_n - pre_sensor_p);//-MainDataStruct.zero_level;
+        if(MainDataStruct.car_level < MainDataStruct.zero_level)
+        {
+           MainDataStruct.car_level = 0;
+        };
+      }
+      else
+      {
+        ++count_wrong_mesure;
+        if(count_wrong_mesure > 3)
+        {
+          count_wrong_mesure = 0;
+          MainDataStruct.car_level = 0;
+          
+        };
+        //if((pre_sensor_n - pre_sensor_p < MainDataStruct.zero_level))
       };
+             
+//      if (MainDataStruct.car_level > 5000)
+//      {  
+//        MainDataStruct.car_level = 0;
+//        
+//      };
+//      else
+//      {
+//             MainDataStruct.car_level = ((uint16_t)(pre_sensor_n - pre_sensor_p))-MainDataStruct.zero_level;
+//       
+//      };
       ADC_DSM_state = ADC_DEINIT;
        ind_n = 0;
     };

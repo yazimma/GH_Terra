@@ -15,8 +15,8 @@
                         GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}
  //GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);
 #define VALVE_RESET()   {GPIO_WriteBit(GPIOE, GPIO_Pin_6,RESET);\
-                        GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);\
-GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
+GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}//\
+//GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
 
 #define VALVE_SENSOR_ON() {GPIO_WriteBit(GPIOA, GPIO_Pin_3,SET);}
 
@@ -112,6 +112,8 @@ typedef enum {
   AUTO_OFF,
   ALL_OFF,
 LOW_TEMP,
+BLOW_ON,
+BLOW_OFF,
 }teValveStatus;
 
 typedef enum {
@@ -153,6 +155,7 @@ typedef struct {
   t_motor_DSM valve_state;
   bool valve_command_done;
   bool valve_error;
+  
   enum {
     ADC_BUSY,
     ADC_IDLE,

@@ -49,6 +49,7 @@ static teValveStatus old_arm_status;
 uint16_t blow_count;
 uint16_t valv_count;
 bool Go = FALSE;
+bool yu = 1;
 //---------------------------------Прототипы функций----------------------------------------------
 void clock_init (void);
 void IO_init(void);
@@ -160,7 +161,7 @@ void main(void)
   {
     unlock_eeprom();
     ee_lock_temperature = 18300;
-    ee_zero_level = 250;
+    ee_zero_level = 2;
     ee_max_level = 800;
     ee_min_level = 400;
     ee_watering_protect_interval = WATERING_PROTECT_INTERVAL;
@@ -342,7 +343,11 @@ void  DSM_Init(void)
     MainDataStruct.lock_temperature = LOCK_TEMPERATURE;
     MainDataStruct.valve_status = VALVE_OFF;
     MainDataStruct.armed = ARMED;
-    MainDataStruct.valve_status = VALVE_OFF;
+    MainDataStruct.temporary_manual_mode = 0;
+   // MainDataStruct.valve_state = M_OPEN;
+   // MainDataStruct.valve_command_done = FALSE;
+    
+   // MainDataStruct.valve_status = VALVE_OFF;
     MainDataStruct.max_level_lcd_on = 1;
     MainDataStruct.min_level_lcd_on = 1;
 //   M_POWER_ON();
@@ -521,26 +526,25 @@ void LCD_update(void)
     if(blow_count > BLOW_COUNT_PERIOD_BLINK)
    {
      blow_count = 0;
-      
-      if(MainDataStruct.valve_status == VALVE_ON)
+      yu=!yu;
+      if(yu)
       {
-        
-        MainDataStruct.valve_status = VALVE_OFF;
-        
+        lcd_blow(M_CLOSE);
       }
       else
       {
-        
-        MainDataStruct.valve_status = VALVE_ON;
-        
+        lcd_blow(M_OPEN);        
       };
     };
-  };
-  
-  if (old_valve_status != MainDataStruct.valve_status)  //Капля
+  }
+  else
   {
-   lcd_valve(MainDataStruct.valve_status);
-    old_valve_status = MainDataStruct.valve_status;
+    
+  if (old_valve_status != MainDataStruct.valve_state)  //Капля
+  {
+   lcd_blow(MainDataStruct.valve_state);
+    old_valve_status = MainDataStruct.valve_state;
+  };
   };
   
   

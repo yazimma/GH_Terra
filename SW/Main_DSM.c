@@ -803,10 +803,24 @@ case TERRA_STANDBY:
     
     
   case TERRA_VALVE_OPEN:
-    if(SystemTime.key_no_pressed_time > NO_PRESSED_KEY_PROTECT_INTERVAL_VALID)
-    {
-    if((SystemTime.protect_interval >= MainDataStruct.watering_protect_interval*3600))
-    {
+//    if(SystemTime.key_no_pressed_time > NO_PRESSED_KEY_PROTECT_INTERVAL_VALID)
+//    {
+//    if((SystemTime.protect_interval >= MainDataStruct.watering_protect_interval*3600))
+//    {
+//      MainDataStruct.valve_status = VALVE_ON;
+//      SystemTime.auto_off_manual_mode_timer = AUTO_OFF_MANUAL_MODE;
+//      MainDataStruct.valve_state = M_OPEN;
+//      MainDataStruct.valve_command_done = FALSE;
+////      //M_POWER_ON();
+////      VALVE_OPEN();
+////      for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
+////      VALVE_RESET();
+////      //M_POWER_OFF();
+//      Main_DSM_status = TERRA_STANDBY; 
+//    };
+//    }
+//    else
+//    {
       MainDataStruct.valve_status = VALVE_ON;
       SystemTime.auto_off_manual_mode_timer = AUTO_OFF_MANUAL_MODE;
       MainDataStruct.valve_state = M_OPEN;
@@ -817,21 +831,7 @@ case TERRA_STANDBY:
 //      VALVE_RESET();
 //      //M_POWER_OFF();
       Main_DSM_status = TERRA_STANDBY; 
-    };
-    }
-    else
-    {
-      MainDataStruct.valve_status = VALVE_ON;
-      SystemTime.auto_off_manual_mode_timer = AUTO_OFF_MANUAL_MODE;
-      MainDataStruct.valve_state = M_OPEN;
-      MainDataStruct.valve_command_done = FALSE;
-//      //M_POWER_ON();
-//      VALVE_OPEN();
-//      for(uint16_t o=0;o<=DELAY_VALVE_DRIVE;o++){asm("NOP"); for(uint16_t o=0;o<=20;o++){asm("NOP");};};
-//      VALVE_RESET();
-//      //M_POWER_OFF();
-      Main_DSM_status = TERRA_STANDBY; 
-    };
+ //   };
       
     break;
     

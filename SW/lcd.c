@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 char lcd_bufer[4];
+char lcd_string[4];
 extern tMainDataStruct MainDataStruct; 
 
 void lcd_low_temp(void)
@@ -72,19 +73,28 @@ void lcd_bat_level(teBattaryLevel level)
     break;
   }
 };
-
+void lcd_blow(t_motor_DSM sts)
+{
+  switch(sts)
+  {
+      case M_OPEN:
+  LCD->RAM[1]|=(1<<6);//LCD->RAM[1]|= (1<<4); 
+    break;
+    
+  case M_CLOSE:
+   LCD->RAM[1]&=(~(1<<6)); //LCD->RAM[1]&=(~(1<<4));  
+    break;
+      
+  };
+  
+  
+};
 void lcd_valve(teValveStatus valve_status)
 {  //LCD->RAM[1]&= ~0x50;
   switch (valve_status)
   {
      
-  case VALVE_ON:
-  LCD->RAM[1]|=(1<<6);//LCD->RAM[1]|= (1<<4); 
-    break;
-    
-  case VALVE_OFF:
-   LCD->RAM[1]&=(~(1<<6)); //LCD->RAM[1]&=(~(1<<4));  
-    break;
+  
     
   case ARMED:
     LCD->RAM[1]&=(~(1<<4));//LCD->RAM[1]|= (1<<4);//LCD->RAM[1]|=(1<<6);
@@ -131,15 +141,28 @@ void lcd_digit_clear(void)
 void lcd_data_write(teLCDData_place place,uint16_t data)
 {
   for (uint8_t o=0;o!= sizeof(lcd_bufer);o++){lcd_bufer[o]=0x00;};
- // lcd_digit_clear();
+  for (uint8_t o=0;o!= sizeof(lcd_string);o++){lcd_string[o]=0x00;};
+
+  // lcd_digit_clear();
   if(data > 999)
   {
     strncat(lcd_bufer,"999",4);
   }
   else
   {
-    sprintf(lcd_bufer,"%u",data);
+    if(data < 10)
+    {
+      strncat(lcd_bufer,"  ",2);
+    };
+    
+    if((data >= 10) && (data < 100))
+    {
+      strncat(lcd_bufer," ",1);
+    };
+    sprintf(lcd_string,"%u",data);
+    strcat(lcd_bufer,lcd_string);
   };
+  
   
   switch(place)
   {
@@ -150,6 +173,26 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
       switch(lcd_bufer[lcd_indx])
       {
 //-------------------------------------------------------------------------------------------------
+      case ' ':
+        switch(lcd_indx)
+        {
+        case 0:
+          sim1_clr();
+         break;
+          
+        case 1:
+          sim2_clr();
+          break;
+          
+        case 2:
+          sim3_clr();
+          
+          break;
+          
+        default:
+          break;
+        };
+        break;
       case '0':
         switch(lcd_indx)
         {
@@ -537,6 +580,28 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
       switch(lcd_bufer[lcd_indx])
       {
 //-------------------------------------------------------------------------------------------------
+     case ' ':
+        switch(lcd_indx)
+        {
+        case 0:  
+          sim4_clr();
+          
+          break;
+          
+        case 1: 
+          sim5_clr();
+          
+          break;
+          
+        case 2:
+          sim6_clr();
+          
+          break;
+          
+        default:
+          break;
+        };
+         break;
       case '0':
         switch(lcd_indx)
         {
@@ -923,6 +988,28 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
       switch(lcd_bufer[lcd_indx])
       {
 //-------------------------------------------------------------------------------------------------
+      case ' ':
+        switch(lcd_indx)
+        {
+        case 0:  
+          sim7_clr();
+          
+          break;
+          
+        case 1: 
+          sim8_clr();
+         
+          break;
+          
+        case 2:
+          sim9_clr();
+          
+          break;
+          
+        default:
+          break;
+        };
+         break;
       case '0':
         switch(lcd_indx)
         {

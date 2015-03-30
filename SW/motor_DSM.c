@@ -17,7 +17,7 @@ switch(motor_DSM_state)
 {
   case MOTOR_NO_INIT:
 
-motor_DSM_state = M_CLOSE;
+motor_DSM_state = M_READY;
 
 
   break;
@@ -43,8 +43,8 @@ break;
 
 case M_CLOSE: 
   
-  VALVE_SENSOR_ON();
-  for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};};
+  GPIO_WriteBit(GPIOA, GPIO_Pin_3,SET);
+  for(uint16_t to=0;to<8000;to++){for(uint16_t w=0;w<90;w++){asm("NOP");};};
   VALVE_CLOSE();
   motor_DSM_state = GO_TO_CLOSE;
   
@@ -54,7 +54,7 @@ break;
   
   
 case M_OPEN:
-  VALVE_SENSOR_ON();
+  GPIO_WriteBit(GPIOA, GPIO_Pin_3,SET);
   for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};};
   VALVE_CLOSE();
   motor_DSM_state = GO_TO_OPEN; 

@@ -3,7 +3,7 @@
 //SoftWare_version
 #define SOFT_WERSION 12
 //LOCK       3600 = 1 h
-#define LOCK_IN 86400
+#define LOCK_IN 1728000
 //-========WakeUP Config===================--
 //1162 = 1s
 #define MAIN_PERIOD 1162
