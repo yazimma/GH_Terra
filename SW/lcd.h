@@ -234,15 +234,15 @@
 #define c326 (LCD->RAM[13]&=(~ (1<<6)))
 #define c327 (LCD->RAM[13]&=(~ (1<<7)))
 
-#define sim1_clr() {c301;c201;c101;c001;c001;c100;c300;c200;}
-#define sim2_clr() {c303;c203;c103;c003;c003;c102;c302;c202;}
-#define sim3_clr() {c305;c205;c105;c005;c005;c104;c304;c204;}
-#define sim4_clr() {c307;c207;c107;c007;c007;c106;c306;c206;}
-#define sim5_clr() {c309;c209;c109;c009;c009;c108;c308;c208;}
-#define sim6_clr() {c311;c211;c111;c011;c011;c110;c310;c210;}
-#define sim7_clr() {c313;c213;c113;c013;c013;c112;c312;c212;}
-#define sim8_clr() {c315;c215;c115;c015;c015;c114;c314;c214;}
-#define sim9_clr() {c317;c217;c117;c017;c017;c116;c316;c216;}
+#define sim1_clr() {c317;c217;c117;c017;c100;c300;c200;}
+#define sim2_clr() {c315;c215;c115;c015;c116;c316;c216;}
+#define sim3_clr() {c313;c213;c113;c013;c114;c314;c214;}
+#define sim4_clr() {c311;c211;c111;c011;c112;c312;c212;}
+#define sim5_clr() {c309;c209;c109;c009;c110;c310;c210;}
+#define sim6_clr() {c307;c207;c107;c007;c108;c308;c208;}
+#define sim7_clr() {c305;c205;c105;c005;c106;c306;c206;}
+#define sim8_clr() {c303;c203;c103;c003;c104;c304;c204;}
+#define sim9_clr() {c301;c201;c101;c001;c102;c302;c202;}
 
 
 

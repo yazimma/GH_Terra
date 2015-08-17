@@ -2,32 +2,37 @@
 
 #ifndef __USER_TYPEDEF_H__
 #define __USER_TYPEDEF_H__
-#define SET_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0)
-#define UP_KEY_PRESSED()  !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_5)
-#define DOWN_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1)
+#define SET_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_3)
+#define UP_KEY_PRESSED()  !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1)
+#define DOWN_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_2)
 #define VALVE_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_6)
 #define M_POWER_ON()  GPIO_WriteBit(GPIOD, GPIO_Pin_7,SET);
 #define M_POWER_OFF() GPIO_WriteBit(GPIOD, GPIO_Pin_7,RESET);
-#define VALVE_CLOSE() {GPIO_WriteBit(GPIOE, GPIO_Pin_7,SET);\
-                        GPIO_WriteBit(GPIOE, GPIO_Pin_6,RESET);}
+#define VALVE_CLOSE() {GPIO_WriteBit(GPIOA, GPIO_Pin_3,SET);\
+                        GPIO_WriteBit(GPIOA, GPIO_Pin_2,RESET);}
 
-#define VALVE_OPEN()    {GPIO_WriteBit(GPIOE, GPIO_Pin_6,SET);\
-                        GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}
- //GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);
-#define VALVE_RESET()   {GPIO_WriteBit(GPIOE, GPIO_Pin_6,RESET);\
-GPIO_WriteBit(GPIOE, GPIO_Pin_7,RESET);}//\
-//GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
-
-#define VALVE_SENSOR_ON() {GPIO_WriteBit(GPIOA, GPIO_Pin_3,SET);}
-
-#define VALVE_SENSOR_OFF() {GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
+#define VALVE_OPEN()    {GPIO_WriteBit(GPIOE, GPIO_Pin_2,SET);\
+                        GPIO_WriteBit(GPIOE, GPIO_Pin_3,RESET);}
  
-#define VALVE_SENSOR_OPEN() !GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7)
-#define VALVE_SENSOR_CLOSE() GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7)
+#define VALVE_RESET()   {       GPIO_WriteBit(GPIOA, GPIO_Pin_2,RESET);\
+                                GPIO_WriteBit(GPIOA, GPIO_Pin_3,RESET);}
+
+
+#define VALVE_SENSOR_ON() {GPIO_WriteBit(GPIOC, GPIO_Pin_4,SET);}
+
+#define VALVE_SENSOR_OFF() {GPIO_WriteBit(GPIOC, GPIO_Pin_4,RESET);}
+ 
+#define VALVE_SENSOR_OPEN() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_5)
+#define VALVE_SENSOR_CLOSE() GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_5)
 
 #define unlock_eeprom() {FLASH_Unlock(FLASH_MemType_Data);}
 #define lock_eeprom()   {FLASH_Lock(FLASH_MemType_Data);}
 //--------------------------EEPROM------------------------------------------------------
+typedef enum{
+  LOCK,
+  UNLOCK = 0xAA,
+  SOFT_STOP = 0xCC
+}soft_lock_t;
 #pragma location = 0x1000
 __no_init uint16_t ee_lock_temperature;
 #pragma location = 0x1010
@@ -40,9 +45,7 @@ __no_init uint16_t ee_min_level;
 #pragma location = 0x1040
 __no_init uint32_t ee_watering_protect_interval;
 #pragma location = 0x1050
-__no_init uint8_t ee_sw_lock;
-
-
+__no_init soft_lock_t ee_sw_lock;
 
 
 //----------------------------END_OF_EEPROM---------------------------------------------
@@ -142,7 +145,7 @@ typedef struct {
   unsigned min_level_lcd_on:1;
   unsigned fast_mode:1;
   unsigned exe_mode:1;
-  uint8_t sw_unlocked;
+  soft_lock_t sw_unlocked;
   teValveStatus armed;
   teBattaryLevel battary_status;
   int16_t temperature;

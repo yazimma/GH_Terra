@@ -58,8 +58,8 @@ INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_COM_IRQHandler, 23)
   if(i)
   {
     chanel = SENSOR_NP;
-    ADC_ChannelCmd(ADC1,ADC_Channel_4, DISABLE);
-    ADC_ChannelCmd(ADC1,ADC_Channel_3, ENABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_7, DISABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_8, ENABLE);
     ADC1->CR1 |= 0x10;  
     ADC_Cmd(ADC1,ENABLE);
     i=FALSE;
@@ -69,8 +69,8 @@ INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_COM_IRQHandler, 23)
   else
   {     
     chanel = SENSOR_PP;
-    ADC_ChannelCmd(ADC1,ADC_Channel_3, DISABLE);
-    ADC_ChannelCmd(ADC1,ADC_Channel_4, ENABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_8, DISABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_7, ENABLE);
     ADC1->CR1 |= 0x10;
     ADC_Cmd(ADC1,ENABLE);
     i=TRUE;
@@ -185,7 +185,7 @@ void ADC_DSM (void)
     
     chanel = BATTARY;
     conversion_samples = 4;
-    GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
+    GPIO_WriteBit(GPIOC, GPIO_Pin_0, SET);
     M_POWER_ON();
     CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,ENABLE); //Включим тактирование АЦП
     /*Можно использовать сканирование каналов,но это увеличивает потребление из-за включения ДМА. 
@@ -237,7 +237,7 @@ void ADC_DSM (void)
    // ADC_VrefintCmd(ENABLE);
     ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
     ADC_ChannelCmd(ADC1,ADC_Channel_Vrefint, DISABLE);
-    ADC_ChannelCmd(ADC1,ADC_Channel_8, ENABLE);  //  ADC_Channel_TempSensor
+    ADC_ChannelCmd(ADC1,ADC_Channel_24, ENABLE);  //  ADC_Channel_TempSensor
     ADC_Cmd(ADC1,ENABLE);
     for(int y=0;y<30000;y++){asm("NOP");};
     

@@ -1,13 +1,18 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
+//Power_save_configuration
+//#define SLEEP_MODE_ENABLED
 //SoftWare_version
-#define SOFT_WERSION 12
+#define SOFT_WERSION 14
 //LOCK       3600 = 1 h
+//1728000
 #define LOCK_IN 1728000
 //-========WakeUP Config===================--
 //1162 = 1s
 #define MAIN_PERIOD 1162
+//Батарея и температура
 #define ADC_GET_VALUE_PERIOD 10
+
 #define ADC_GET_SENSOR_PERIOD_FAST_MODE 1
 #define ADC_GET_SENSOR_PERIOD_EXE_MODE 1
 #define EXE_MODE_DUTY 14400
@@ -54,7 +59,11 @@
 //=============================ДАТЧИК_ВЛАЖНОСТИ_ПОЧВЫ__________________________________________
 //240 Минимальный перекос моста из-за неточности резисторов и супрессоров на выходе измерителя. 
 #define ZERO_LEVEL 240
-
-
+//==============================Уровни заряда батареи=========================================
+#define BAT_MAX_LEVEL 2700
+#define BAT_MID_LEVEL 2400
+#define BAT_LOW_LEVEL 2000
+#define BATTARY_CRIT_BLINK_PERIOD 20000
+#define BAT_HESTEREZIS 100
 
 #endif //__CONFIG_H__

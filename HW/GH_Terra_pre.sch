@@ -13122,10 +13122,10 @@ General-purpose diode for high-speed switching</description>
 </classes>
 <parts>
 <part name="U1" library="st-microelectronics" deviceset="STM8L152C6" device="" value="STM8L152C6T6"/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="R0603" value="RC0603FR-0727KL"/>
-<part name="R11" library="rcl" deviceset="R-EU_" device="R0603" value="RC0603FR-0727KL"/>
-<part name="R12" library="rcl" deviceset="R-EU_" device="R0603" value="RC0603FR-0727KL"/>
-<part name="R13" library="rcl" deviceset="R-EU_" device="R0603" value="RC0603FR-0727KL"/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="R0603" value="1k_1%"/>
+<part name="R11" library="rcl" deviceset="R-EU_" device="R0603" value="1k_1%"/>
+<part name="R12" library="rcl" deviceset="R-EU_" device="R0603" value="1k_1%"/>
+<part name="R13" library="rcl" deviceset="R-EU_" device="R0603" value="1k_1%"/>
 <part name="U$2" library="rubber_key" deviceset="RK_4X3" device=""/>
 <part name="U$3" library="rubber_key" deviceset="RK_4X3" device=""/>
 <part name="U$4" library="rubber_key" deviceset="RK_4X3" device=""/>
@@ -13208,7 +13208,7 @@ General-purpose diode for high-speed switching</description>
 </instance>
 <instance part="R11" gate="G$1" x="147.32" y="-68.58" smashed="yes" rot="R180">
 <attribute name="NAME" x="151.13" y="-70.0786" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="163.83" y="-65.278" size="1.778" layer="96" rot="R180"/>
+<attribute name="VALUE" x="151.13" y="-65.278" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="R12" gate="G$1" x="127" y="-81.28" smashed="yes" rot="R180">
 <attribute name="NAME" x="130.81" y="-82.7786" size="1.778" layer="95" rot="R180"/>
@@ -13216,7 +13216,7 @@ General-purpose diode for high-speed switching</description>
 </instance>
 <instance part="R13" gate="G$1" x="147.32" y="-81.28" smashed="yes" rot="R180">
 <attribute name="NAME" x="151.13" y="-82.7786" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="163.83" y="-77.978" size="1.778" layer="96" rot="R180"/>
+<attribute name="VALUE" x="151.13" y="-77.978" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="U$2" gate="G$1" x="223.52" y="15.24"/>
 <instance part="U$3" gate="G$1" x="241.3" y="15.24"/>

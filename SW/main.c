@@ -39,17 +39,19 @@ extern tStateMashine_status Setup_DSM_status;
 extern tsSystemTime SystemTime;
 extern uint8_t scrool;
 extern t_motor_DSM motor_DSM_state;
-bool u = FALSE;
+_Bool u = FALSE;
 static uint16_t old_max_level;
 static uint16_t old_min_level;
 uint16_t old_car_level;
 static teBattaryLevel old_battary_status;
-static teValveStatus old_valve_status;
+static t_motor_DSM old_valve_status;
 static teValveStatus old_arm_status; 
 uint16_t blow_count;
 uint16_t valv_count;
+uint16_t bat_crit_count;
 bool Go = FALSE;
-bool yu = 1;
+_Bool yu = TRUE;
+_Bool bat_critical_blink = FALSE;
 //---------------------------------Прототипы функций----------------------------------------------
 void clock_init (void);
 void IO_init(void);
@@ -63,8 +65,8 @@ void go_to_sleap(void)
  // FLASH->CR1 = 0x08;
   //while(((CLK->REGCSR)&0x80)==0x80);
 /* Swith off the Regulator*/
- // CLK->REGCSR = 0x02;
- // while(((CLK->REGCSR)&0x01)==0x01);
+//  CLK->REGCSR = 0x02;
+//  while(((CLK->REGCSR)&0x01)==0x01);
   WFE->CR1 = 0x30;
   WFE->CR2 = 0x06;
   WFE->CR3 = 0x06;
@@ -80,13 +82,13 @@ for (i=0; i<100; i++);
   WFE->CR4 = 0x00;
   __enable_interrupt();
 //Switch on the regulator
- // CLK->REGCSR = 0x00;
- // while(((CLK->REGCSR)&0x1) != 0x1);
+//  CLK->REGCSR = 0x00;
+//  while(((CLK->REGCSR)&0x1) != 0x1);
 }
 
 
 //Прерывания клавиш -------------------------------------------------------------------------------
-INTERRUPT_HANDLER(EXTI0_IRQHandler, 8)  //Кнопка SET
+INTERRUPT_HANDLER(EXTI0_IRQHandler, 11)  //Кнопка SET 3
 { 
   MainDataStruct.ready_to_suspend = FALSE;
   if(!MainDataStruct.exe_mode)
@@ -97,9 +99,9 @@ INTERRUPT_HANDLER(EXTI0_IRQHandler, 8)  //Кнопка SET
 };
 SystemTime.key_no_pressed_time = 0;
 MainDataStruct.set_key_pressed = 1;
-EXTI_ClearITPendingBit(EXTI_IT_Pin0);
+EXTI_ClearITPendingBit(EXTI_IT_Pin3);
 }
-INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)  //Кнопка Down
+INTERRUPT_HANDLER(EXTI1_IRQHandler, 10)  //Кнопка Down 2
 {
   MainDataStruct.ready_to_suspend = FALSE;
   scrool = 0;
@@ -111,10 +113,10 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler, 9)  //Кнопка Down
 };
 SystemTime.key_no_pressed_time = 0;
 MainDataStruct.down_key_pressed = 1;
-EXTI_ClearITPendingBit(EXTI_IT_Pin1);
+EXTI_ClearITPendingBit(EXTI_IT_Pin2);
 }
 
-INTERRUPT_HANDLER(EXTI5_IRQHandler, 13) //Кнопка Up
+INTERRUPT_HANDLER(EXTI5_IRQHandler, 9) //Кнопка Up 1
 {
   MainDataStruct.ready_to_suspend = FALSE;
   scrool = 0;
@@ -126,7 +128,7 @@ INTERRUPT_HANDLER(EXTI5_IRQHandler, 13) //Кнопка Up
 };
 SystemTime.key_no_pressed_time = 0;
 MainDataStruct.up_key_pressed = 1;
-EXTI_ClearITPendingBit(EXTI_IT_Pin5);
+EXTI_ClearITPendingBit(EXTI_IT_Pin1);
 }
 //INTERRUPT_HANDLER(EXTI6_IRQHandler, 14) //Кнопка Valve
 //{
@@ -165,13 +167,13 @@ void main(void)
     ee_max_level = 800;
     ee_min_level = 400;
     ee_watering_protect_interval = WATERING_PROTECT_INTERVAL;
-    ee_sw_lock = 0x00;
+    ee_sw_lock = LOCK;
     lock_eeprom();
   };
   if(UP_KEY_PRESSED() && DOWN_KEY_PRESSED())
   {
      unlock_eeprom();
-     ee_sw_lock = 0xAA;
+     ee_sw_lock = UNLOCK;
      
      lock_eeprom();
      for (int sw = 0; sw != SOFT_WERSION;sw++)
@@ -191,14 +193,15 @@ void main(void)
   MainDataStruct.ready_to_suspend = FALSE;
   MainDataStruct.watering_protect_interval = ee_watering_protect_interval;
   MainDataStruct.sw_unlocked = ee_sw_lock;
-   __enable_interrupt();
-   if(MainDataStruct.sw_unlocked == 0xCC)
+  //__enable_interrupt();
+   if(MainDataStruct.sw_unlocked == SOFT_STOP)
    {
       blink(ON);
       lcd_bat_level(CRITICAL);
       while(1){};
      
    };
+    enableInterrupts();
   while (1)
     {
       
@@ -207,12 +210,12 @@ void main(void)
       ADC_DSM ();
       motor_DSM ();
       
-      if(MainDataStruct.sw_unlocked != 0xAA)
+      if(MainDataStruct.sw_unlocked != UNLOCK) //Если софт не разблокирован проверим таймер
       {
-        if(SystemTime.on_timer >= LOCK_IN)
+        if(SystemTime.on_timer >= LOCK_IN) //Вышло время триала?
         {
           unlock_eeprom();
-          ee_sw_lock = 0xCC;
+          ee_sw_lock = SOFT_STOP; //Залочить 
           lock_eeprom();
           blink(ON);
           lcd_bat_level(CRITICAL);
@@ -231,12 +234,12 @@ void main(void)
         if (MainDataStruct.set_key_pressed) {MainDataStruct.ready_to_suspend = FALSE;};
         if (MainDataStruct.up_key_pressed) {MainDataStruct.ready_to_suspend = FALSE;};
         if (MainDataStruct.down_key_pressed) {MainDataStruct.ready_to_suspend = FALSE;};
-        if (MainDataStruct.fast_mode) {MainDataStruct.ready_to_suspend = FALSE;};
+        //if (MainDataStruct.fast_mode) {MainDataStruct.ready_to_suspend = FALSE;};
         if (MainDataStruct.battary_level == 0) {MainDataStruct.ready_to_suspend = FALSE;};
         
 if (MainDataStruct.ready_to_suspend)
 {
-   
+#ifdef SLEEP_MODE_ENABLED
     CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
     CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_LSI);
     CLK_SYSCLKSourceSwitchCmd(ENABLE);
@@ -244,6 +247,7 @@ if (MainDataStruct.ready_to_suspend)
     CLK_HSICmd(DISABLE);
     __enable_interrupt();
   go_to_sleap();
+#endif /*SLEEP_MODE_ENABLED*/
   CLK_HSICmd(ENABLE);
   while (((CLK->ICKCR)& 0x02)!=0x02);
   CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_HSI);
@@ -284,28 +288,28 @@ void IO_init(void)
   GPIO_Init(GPIOE,0x3f,GPIO_Mode_Out_PP_Low_Slow); 
   //-----------------------------------------------
   //Key
-  GPIO_Init(GPIOC,0x23,GPIO_Mode_In_FL_IT);
+  GPIO_Init(GPIOC,0x0E,GPIO_Mode_In_FL_IT);
   //Преывания по кнопкам
-  EXTI_SetPinSensitivity(EXTI_Pin_0,EXTI_Trigger_Falling);//_Low
   EXTI_SetPinSensitivity(EXTI_Pin_1,EXTI_Trigger_Falling);//_Low
-  EXTI_SetPinSensitivity(EXTI_Pin_5,EXTI_Trigger_Falling);//_Low
+  EXTI_SetPinSensitivity(EXTI_Pin_2,EXTI_Trigger_Falling);//_Low
+  EXTI_SetPinSensitivity(EXTI_Pin_3,EXTI_Trigger_Falling);//_Low
  // EXTI_SetPinSensitivity(EXTI_Pin_6,EXTI_Trigger_Falling);//_Low
-  enableInterrupts();
+ 
   //-----------------------------------------------
   //VALVE
-  GPIO_Init(GPIOE,0xC0,GPIO_Mode_Out_PP_Low_Slow);
+  GPIO_Init(GPIOA,GPIO_Pin_2 + GPIO_Pin_3,GPIO_Mode_Out_PP_Low_Slow);
   //Valve Sensor
-  GPIO_Init(GPIOA,0x08,GPIO_Mode_Out_PP_Low_Slow);
-  GPIO_Init(GPIOD,0x80,GPIO_Mode_In_FL_No_IT);
+  GPIO_Init(GPIOC,GPIO_Pin_4,GPIO_Mode_Out_PP_Low_Slow);
+  GPIO_Init(GPIOC,GPIO_Pin_5,GPIO_Mode_In_FL_No_IT);
   //-----------------------------------------------
   //Internal connections
   //GPIO_Init(GPIOD,0x80,GPIO_Mode_Out_PP_Low_Slow); 
-  GPIO_Init(GPIOF,0x01,GPIO_Mode_Out_PP_Low_Slow);
+  GPIO_Init(GPIOC,GPIO_Pin_0,GPIO_Mode_Out_PP_Low_Slow);
   //GPIO_Init(GPIOC,0x64,GPIO_Mode_Out_PP_Low_Slow);
   //------------------------------------------------
   //ADC
-  GPIO_Init(GPIOD,0x40,GPIO_Mode_In_FL_No_IT);
-  GPIO_Init(GPIOC,0x90,GPIO_Mode_In_FL_No_IT); 
+  GPIO_Init(GPIOD,0xC0,GPIO_Mode_In_FL_No_IT);
+  GPIO_Init(GPIOF,GPIO_Pin_0,GPIO_Mode_In_FL_No_IT); 
   //------------------------------------------------
   //Timers
   GPIO_Init(GPIOD,0x30,GPIO_Mode_Out_PP_Low_Slow); 
@@ -376,6 +380,7 @@ void  DSM_Init(void)
 };
 
 uint16_t level_lcd_blinc_count;
+
 void LCD_update(void)
 { 
   
@@ -547,7 +552,24 @@ void LCD_update(void)
   };
   };
   
+  //Мигаем рамкой батареи при критическом разряде
   
+//  if(MainDataStruct.battary_status == CRITICAL)
+//  {
+//    if(bat_crit_count++ >= BATTARY_CRIT_BLINK_PERIOD)
+//    {
+//      bat_crit_count = 0;
+//      bat_critical_blink = !bat_critical_blink;
+//      if(bat_critical_blink)
+//        {
+//          s012;
+//        }
+//      else
+//        {
+//          c012;
+//        };
+//    };
+//  };
   
   
     

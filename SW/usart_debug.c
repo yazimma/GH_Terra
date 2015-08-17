@@ -52,7 +52,7 @@ INTERRUPT_HANDLER(USART1_RX_IRQHandler, 28)
 tErr UsartInit(uint32_t boud)
 {
    CLK_PeripheralClockConfig(CLK_Peripheral_USART1,ENABLE);
-   USART_Init (USART1,boud,USART_WordLength_8b,USART_StopBits_1,USART_Parity_No,0x0c);// | USART_Mode_Tx = 0x0c
+   USART_Init (USART1,boud,USART_WordLength_8b,USART_StopBits_1,USART_Parity_No,USART_Mode_Tx);// | USART_Mode_Tx = 0x0c
    USART_ITConfig(USART1,USART_IT_RXNE,ENABLE);
    return OK;
 };

@@ -15,16 +15,16 @@ sim2_clr();
 sim3_clr();
 #ifdef __dash
 s200;
-s202;
-s204;
+s216;
+s214;
 #else
 s300;
 s100;
-s001;
-s102;
-s202;
-s103;
-s003;
+s017;
+s116;
+s216;
+s115;
+s015;
 #endif //__dash
   
 };
@@ -51,21 +51,41 @@ void lcd_bat_level(teBattaryLevel level)
   switch (level)
   {
   case MAX:
-    LCD->RAM[0] |= 0x55;
+    s012;
+    s014;
+    s016;
+    s000;
+//    LCD->RAM[0] |= 0x01;
+//    LCD->RAM[1] |= 0x50;
+//    LCD->RAM[2] |= 0x01;
     LCD->CR1 &= ~0xe0;
     break;
   case MID:
-    LCD->RAM[0] |= 0x54;
-    LCD->CR1 &= ~0xe0;
+    s012;
+    s014;
+    s016;
+    c000;
+    
+//    LCD->RAM[1] |= 0x50;
+//    LCD->RAM[2] |= 0x01;
+//    LCD->CR1 &= ~0xe0;
     break;
   case LOW:
-    LCD->RAM[0] |= 0x50;
+    s012;
+    s014;
+    c016;
+    c000;
+//    LCD->RAM[0] |= 0x01;
+//    LCD->RAM[1] |= 0x50;
     LCD->CR1 &= ~0xe0;
     break;
   case CRITICAL:
-    
-    LCD->RAM[0] |= 0x40;
-    LCD->CR1 |= 0xe0;
+    s012;
+    c014;
+    c016;
+    c000;
+//    LCD->RAM[1] |= 0x10;
+    //LCD->CR1 |= 0xe0;
     break;
     
   default:
@@ -78,11 +98,11 @@ void lcd_blow(t_motor_DSM sts)
   switch(sts)
   {
       case M_OPEN:
-  LCD->RAM[1]|=(1<<6);//LCD->RAM[1]|= (1<<4); 
+  LCD->RAM[0]|=(1<<4);//LCD->RAM[1]|= (1<<4); 
     break;
     
   case M_CLOSE:
-   LCD->RAM[1]&=(~(1<<6)); //LCD->RAM[1]&=(~(1<<4));  
+   LCD->RAM[0]&=(~(1<<4)); //LCD->RAM[1]&=(~(1<<4));  
     break;
       
   };
@@ -97,20 +117,20 @@ void lcd_valve(teValveStatus valve_status)
   
     
   case ARMED:
-    LCD->RAM[1]&=(~(1<<4));//LCD->RAM[1]|= (1<<4);//LCD->RAM[1]|=(1<<6);
+    LCD->RAM[0]&=(~(1<<6));//LCD->RAM[1]|= (1<<4);//LCD->RAM[1]|=(1<<6);
     break;
     
   case DISARMED:
     if(!MainDataStruct.temporary_manual_mode)
     {
-      LCD->RAM[1]|= (1<<4);//LCD->RAM[1]&=(~(1<<4));//LCD->RAM[1]&=(~(1<<6)); 
+      LCD->RAM[0]|= (1<<6);//LCD->RAM[1]&=(~(1<<4));//LCD->RAM[1]&=(~(1<<6)); 
     };
     break;
   case ALL_OFF:
-      LCD->RAM[1]&= ~0x50;
+      LCD->RAM[0]&= ~0x50;
     break;
   default:
-     LCD->RAM[1]&= ~0x50;
+     LCD->RAM[0]&= ~0x50;
     break;
   };
 };
@@ -198,32 +218,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim1_clr();
-          s301;
-          s201;
-          s101;
-          s001;
+          s317;
+          s217;
+          s117;
+          s017;
           s100;
           s300;
           break;
           
         case 1:
           sim2_clr();
-          s303;
-          s203;
-          s103;
-          s003;
-          s102;
-          s302;
+          s315;
+          s215;
+          s115;
+          s015;
+          s116;
+          s316;
           break;
           
         case 2:
           sim3_clr();
-          s305;
-          s205;
-          s105;
-          s005;
-          s104;
-          s304;
+          s313;
+          s213;
+          s113;
+          s013;
+          s114;
+          s314;
           break;
           
         default:
@@ -236,20 +256,20 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim1_clr();
-          s201;
-          s101;
+          s217;
+          s117;
           break;
           
         case 1:
           sim2_clr();
-          s203;
-          s103;
+          s215;
+          s115;
           break;
           
         case 2:
           sim3_clr();
-          s205;
-          s105;
+          s213;
+          s113;
           break;
         default:
           break;
@@ -262,29 +282,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim1_clr();
-          s301;
-          s201;
+          s317;
+          s217;
           s200;
           s100;
-          s001;
+          s017;
           break;
           
         case 1:
           sim2_clr();
-          s303;
-          s203;
-          s202;
-          s102;
-          s003;
+          s315;
+          s215;
+          s216;
+          s116;
+          s015;
           break;
           
         case 2:
           sim3_clr();
-         s305;
-         s205;
-         s204;
-         s104;
-         s005;
+         s313;
+         s213;
+         s214;
+         s114;
+         s013;
           break;
         default:
           break;
@@ -298,29 +318,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim1_clr();
-          s301;
-          s201;
+          s317;
+          s217;
           s200;
-          s101;
-          s001;
+          s117;
+          s017;
           break;
           
         case 1:
           sim2_clr();
-          s303;
-          s203;
-          s202;
-          s103;
-          s003;
+          s315;
+          s215;
+          s216;
+          s115;
+          s015;
           break;
           
         case 2:
          sim3_clr();
-         s305;
-         s205;
-         s204;
-         s105;
-         s005;
+         s313;
+         s213;
+         s214;
+         s113;
+         s013;
           break;
         default:
           break;
@@ -336,24 +356,24 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
           sim1_clr();
           s300;
           s200;
-          s201;
-          s101;
+          s217;
+          s117;
           break;
           
         case 1:
          sim2_clr();
-         s302;
-         s202;
-         s203;
-         s103;
+         s316;
+         s216;
+         s215;
+         s115;
           break;
           
         case 2:
           sim3_clr();
-          s304;
-          s205;
-          s105;
-          s204;
+          s314;
+          s213;
+          s113;
+          s214;
           break;
         default:
           break;
@@ -367,29 +387,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim1_clr();
-          s301;
+          s317;
           s300;
           s200;
-          s101;
-          s001;
+          s117;
+          s017;
           break;
           
         case 1:
           sim2_clr();
-          s303;
-          s302;
-          s202;
-          s103;
-          s003;
+          s315;
+          s316;
+          s216;
+          s115;
+          s015;
           break;
           
         case 2:
           sim3_clr();
-          s305;
-          s304;
-          s204;
-          s105;
-          s005;
+          s313;
+          s314;
+          s214;
+          s113;
+          s013;
           break;
         default:
           break;
@@ -403,32 +423,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim1_clr();
-          s301;
+          s317;
           s300;
           s100;
-          s001;
-          s101;
+          s017;
+          s117;
           s200;
           break;
           
         case 1:
           sim2_clr();
-          s303;
-          s302;
-          s202;
-          s103;
-          s003;
-          s102;
+          s315;
+          s316;
+          s216;
+          s115;
+          s015;
+          s116;
           break;
           
         case 2:
           sim3_clr();
-          s305;
-          s304;
-          s104;
-          s005;
-          s105;
-          s204;
+          s313;
+          s314;
+          s114;
+          s013;
+          s113;
+          s214;
           
           break;
         default:
@@ -443,23 +463,23 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim1_clr();
-          s301;
-          s201;
-          s101;
+          s317;
+          s217;
+          s117;
           break;
           
         case 1:
           sim2_clr();
-          s303;
-          s203;
-          s103;
+          s315;
+          s215;
+          s115;
           break;
           
         case 2:
           sim3_clr();
-          s305;
-          s205;
-          s105;
+          s313;
+          s213;
+          s113;
           break;
         default:
           break;
@@ -473,10 +493,10 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim1_clr();
-          s301;
-          s201;
-          s101;
-          s001;
+          s317;
+          s217;
+          s117;
+          s017;
           s100;
           s300;
           s200;
@@ -484,24 +504,24 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
           
         case 1:
          sim2_clr();
-         s303;
-         s203;
-         s103;
-         s003;
-         s102;
-         s302;
-         s202;
+         s315;
+         s215;
+         s115;
+         s015;
+         s116;
+         s316;
+         s216;
           break;
           
         case 2:
           sim3_clr();
-          s305;
-          s205;
-          s105;
-          s005;
-          s104;
-          s304;
-          s204;
+          s313;
+          s213;
+          s113;
+          s013;
+          s114;
+          s314;
+          s214;
           break;
         default:
           break;
@@ -515,32 +535,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim1_clr();
-          s301;
-          s201;
+          s317;
+          s217;
           s200;
           s300;
-          s101;
-          s001;
+          s117;
+          s017;
           break;
           
         case 1: 
           sim2_clr();
-          s303;
-          s203;
-          s202;
-          s302;
-          s103;
-          s003;
+          s315;
+          s215;
+          s216;
+          s316;
+          s115;
+          s015;
           break;
           
         case 2:
           sim3_clr();
-          s305;
-          s205;
-          s204;
-          s304;
-          s105;
-          s005;
+          s313;
+          s213;
+          s214;
+          s314;
+          s113;
+          s013;
           break;
         default:
           break;
@@ -607,12 +627,12 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim4_clr();
-          s307;
-          s207;
-          s107;
-          s007;
-          s106;
-          s306;
+          s311;
+          s211;
+          s111;
+          s011;
+          s112;
+          s312;
           break;
           
         case 1: 
@@ -621,18 +641,18 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
           s209;
           s109;
           s009;
-          s108;
-          s308;
+          s110;
+          s310;
           break;
           
         case 2:
           sim6_clr();
-          s311;
-          s211;
-          s111;
-          s011;
-          s110;
-          s310;
+          s307;
+          s207;
+          s107;
+          s007;
+          s108;
+          s308;
           break;
           
         default:
@@ -645,8 +665,8 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim4_clr();
-          s207;
-          s107;
+          s211;
+          s111;
           break;
           
         case 1: 
@@ -657,8 +677,8 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
           
         case 2:
           sim6_clr();
-          s211;
-          s111;
+          s207;
+          s107;
           break;
         default:
           break;
@@ -671,29 +691,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim4_clr();
-          s307;
-          s207;
-          s206;
-          s106;
-          s007;
+          s311;
+          s211;
+          s212;
+          s112;
+          s011;
           break;
           
         case 1:
           sim5_clr();
           s309;
           s209;
-          s208;
-          s108;
+          s210;
+          s110;
           s009;
           break;
           
         case 2:
          sim6_clr();
-         s311;
-         s211;
-         s210;
-         s110;
-         s011;
+         s307;
+         s207;
+         s208;
+         s108;
+         s007;
           break;
         default:
           break;
@@ -707,29 +727,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim4_clr();
-          s307;
-          s207;
-          s206;
-          s107;
-          s007;
+          s311;
+          s211;
+          s212;
+          s111;
+          s011;
           break;
           
         case 1:
           sim5_clr();
           s309;
           s209;
-          s208;
+          s210;
           s109;
           s009;
           break;
           
         case 2:
           sim6_clr();
-         s311;
-         s211;
-         s210;
-         s111;
-         s011;
+         s307;
+         s207;
+         s208;
+         s107;
+         s007;
           break;
         default:
           break;
@@ -743,26 +763,26 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim4_clr();
-          s306;
-          s206;
-          s207;
-          s107;
+          s312;
+          s212;
+          s211;
+          s111;
           break;
           
         case 1:
           sim5_clr();
-         s308;
-         s208;
+         s310;
+         s210;
          s209;
          s109;
           break;
           
         case 2:
           sim6_clr();
-          s310;
-          s211;
-          s111;
-          s210;
+          s308;
+          s208;
+          s207;
+          s107;
           break;
         default:
           break;
@@ -776,29 +796,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim4_clr();
-          s307;
-          s306;
-          s206;
-          s107;
-          s007;
+          s311;
+          s312;
+          s212;
+          s111;
+          s011;
           break;
           
         case 1:
           sim5_clr();
           s309;
-          s308;
-          s208;
+          s310;
+          s210;
           s109;
           s009;
           break;
           
         case 2:
           sim6_clr();
-          s311;
-          s310;
-          s210;
-          s111;
-          s011;
+          s307;
+          s308;
+          s208;
+          s107;
+          s007;
           break;
         default:
           break;
@@ -812,32 +832,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim4_clr();
-          s307;
-          s306;
-          s106;
-          s007;
-          s107;
-          s206;
+          s311;
+          s312;
+          s212;
+          s111;
+          s011;
+          s112;
           break;
           
         case 1:
           sim5_clr();
           s309;
-          s308;
-          s208;
+          s310;
+          s210;
           s109;
           s009;
-          s108;
+          s110;
           break;
           
         case 2:
           sim6_clr();
-          s311;
-          s310;
-          s110;
-          s011;
-          s111;
-          s210;
+          s307;
+          s308;
+          s208;
+          s107;
+          s007;
+          s108;
           
           break;
         default:
@@ -852,9 +872,9 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim4_clr();
-          s307;
-          s207;
-          s107;
+          s311;
+          s211;
+          s111;
           break;
           
         case 1:
@@ -866,9 +886,9 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
           
         case 2:
           sim6_clr();
-          s311;
-          s211;
-          s111;
+          s307;
+          s207;
+          s107;
           break;
         default:
           break;
@@ -882,13 +902,13 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim4_clr();
-          s307;
-          s207;
-          s107;
-          s007;
-          s106;
-          s306;
-          s206;
+          s311;
+          s211;
+          s111;
+          s011;
+          s112;
+          s312;
+          s212;
           break;
           
         case 1:
@@ -897,20 +917,20 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
          s209;
          s109;
          s009;
-         s108;
-         s308;
-         s208;
+         s110;
+         s310;
+         s210;
           break;
           
         case 2:
           sim6_clr();
-          s311;
-          s211;
-          s111;
-          s011;
-          s110;
-          s310;
-          s210;
+          s307;
+          s207;
+          s107;
+          s007;
+          s108;
+          s308;
+          s208;
           break;
         default:
           break;
@@ -924,32 +944,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim4_clr();
-          s307;
-          s207;
-          s206;
-          s306;
-          s107;
-          s007;
+          s311;
+          s211;
+          s111;
+          s011;
+          s312;
+          s212;
           break;
           
         case 1:
           sim5_clr();
           s309;
           s209;
-          s208;
-          s308;
           s109;
           s009;
+          s310;
+          s210;
           break;
           
         case 2:
           sim6_clr();
-          s311;
-          s211;
-          s210;
-          s310;
-          s111;
-          s011;
+          s307;
+          s207;
+          s107;
+          s007;
+          s308;
+          s208;
           break;
         default:
           break;
@@ -1015,32 +1035,33 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim7_clr();
-          s313;
-          s213;
-          s113;
-          s013;
-          s112;
-          s312;
+          s305;
+          s205;
+          s105;
+          s005;
+          s106;
+          s306;
+       
           break;
           
         case 1: 
           sim8_clr();
-          s315;
-          s215;
-          s115;
-          s015;
-          s114;
-          s314;
-          break;
+         s303;
+         s203;
+         s103;
+         s003;
+         s104;
+         s304;
+         break;
           
         case 2:
           sim9_clr();
-          s317;
-          s217;
-          s117;
-          s017;
-          s116;
-          s316;
+          s301;
+          s201;
+          s101;
+          s001;
+          s102;
+          s302;
           break;
           
         default:
@@ -1053,20 +1074,20 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim7_clr();
-          s213;
-          s113;
+          s205;
+          s105;
           break;
           
         case 1: 
           sim8_clr();
-          s215;
-          s115;
+          s203;
+          s103;
           break;
           
         case 2:
           sim9_clr();
-          s217;
-          s117;
+          s201;
+          s101;
           break;
         default:
           break;
@@ -1079,29 +1100,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim7_clr();
-          s313;
-          s213;
-          s212;
-          s112;
-          s013;
+          s305;
+          s205;
+          s005;
+          s106;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-          s315;
-          s215;
-          s214;
-          s114;
-          s015;
+          s303;
+          s203;
+          s204;
+          s104;
+          s003;
           break;
           
         case 2:
          sim9_clr();
-         s317;
-         s217;
-         s216;
-         s116;
-         s017;
+         s301;
+         s201;
+         s202;
+         s102;
+         s001;
           break;
         default:
           break;
@@ -1115,29 +1136,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim7_clr();
-          s313;
-          s213;
-          s212;
-          s113;
-          s013;
+          s305;
+          s205;
+          s105;
+          s005;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-          s315;
-          s215;
-          s214;
-          s115;
-          s015;
+          s303;
+          s203;
+          s204;
+          s103;
+          s003;
           break;
           
         case 2:
           sim9_clr();
-         s317;
-         s217;
-         s216;
-         s117;
-         s017;
+         s301;
+         s201;
+         s202;
+         s101;
+         s001;
           break;
         default:
           break;
@@ -1151,26 +1172,26 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:  
           sim7_clr();
-          s312;
-          s212;
-          s213;
-          s113;
+          s205;
+          s105;
+          s306;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-         s314;
-         s214;
-         s215;
-         s115;
+         s304;
+         s204;
+         s203;
+         s103;
           break;
           
         case 2:
           sim9_clr();
-          s316;
-          s217;
-          s117;
-          s216;
+          s302;
+          s202;
+          s201;
+          s101;
           break;
         default:
           break;
@@ -1184,29 +1205,29 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim7_clr();
-          s313;
-          s312;
-          s212;
-          s113;
-          s013;
+          s305;
+          s105;
+          s005;
+          s306;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-          s315;
-          s314;
-          s214;
-          s115;
-          s015;
+          s303;
+          s304;
+          s204;
+          s103;
+          s003;
           break;
           
         case 2:
           sim9_clr();
-          s317;
-          s316;
-          s216;
-          s117;
-          s017;
+          s301;
+          s302;
+          s202;
+          s101;
+          s001;
           break;
         default:
           break;
@@ -1220,32 +1241,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim7_clr();
-          s313;
-          s312;
-          s112;
-          s013;
-          s113;
-          s212;
+          s305;
+          s105;
+          s005;
+          s106;
+          s306;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-          s315;
-          s314;
-          s214;
-          s115;
-          s015;
-          s114;
+          s303;
+          s304;
+          s204;
+          s104;
+          s103;
+          s003;
           break;
           
         case 2:
           sim9_clr();
-          s317;
-          s316;
-          s116;
-          s017;
-          s117;
-          s216;
+          s301;
+          s302;
+          s202;
+          s101;
+          s001;
+          s102;
           
           break;
         default:
@@ -1260,23 +1281,23 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim7_clr();
-          s313;
-          s213;
-          s113;
+          s305;
+          s205;
+          s105;
           break;
           
         case 1:
           sim8_clr();
-          s315;
-          s215;
-          s115;
+          s303;
+          s203;
+          s103;
           break;
           
         case 2:
           sim9_clr();
-          s317;
-          s217;
-          s117;
+          s301;
+          s201;
+          s101;
           break;
         default:
           break;
@@ -1290,35 +1311,35 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim7_clr();
-          s313;
-          s213;
-          s113;
-          s013;
-          s112;
-          s312;
-          s212;
+          s305;
+          s205;
+          s105;
+          s005;
+          s106;
+          s306;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-         s315;
-         s215;
-         s115;
-         s015;
-         s114;
-         s314;
-         s214;
+         s303;
+         s203;
+         s103;
+         s003;
+         s104;
+         s304;
+         s204;
           break;
           
         case 2:
           sim9_clr();
-          s317;
-          s217;
-          s117;
-          s017;
-          s116;
-          s316;
-          s216;
+          s301;
+          s201;
+          s101;
+          s001;
+          s102;
+          s302;
+          s202;
           break;
         default:
           break;
@@ -1332,32 +1353,32 @@ void lcd_data_write(teLCDData_place place,uint16_t data)
         {
         case 0:
           sim7_clr();
-          s313;
-          s213;
-          s212;
-          s312;
-          s113;
-          s013;
+          s305;
+          s205;
+          s105;
+          s005;
+          s306;
+          s206;
           break;
           
         case 1:
           sim8_clr();
-          s315;
-          s215;
-          s214;
-          s314;
-          s115;
-          s015;
+          s303;
+          s203;
+          s103;
+          s003;
+          s304;
+          s204;
           break;
           
         case 2:
           sim9_clr();
-          s317;
-          s217;
-          s216;
-          s316;
-          s117;
-          s017;
+          s301;
+          s201;
+          s101;
+          s001;
+          s302;
+          s202;
           break;
         default:
           break;

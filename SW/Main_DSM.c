@@ -198,31 +198,31 @@ case TERRA_STANDBY:
     down_key_counter = 0;
   };
       //---------------------------------Battary Level Control-------------------------------------
-      if(MainDataStruct.battary_level > 2700)
-    {
-  MainDataStruct.battary_status = MAX;
+  if(MainDataStruct.battary_level >= BAT_MAX_LEVEL + BAT_HESTEREZIS)
+  {
+    MainDataStruct.battary_status = MAX;
   }
   else
-    {
-    if ((MainDataStruct.battary_level <= 2700) && ( MainDataStruct.battary_level > 2400))
   {
-  MainDataStruct.battary_status = MID;
-  }
-  else 
+    if ((MainDataStruct.battary_level < BAT_MAX_LEVEL) && ( MainDataStruct.battary_level >= BAT_MID_LEVEL + BAT_HESTEREZIS))
     {
-    if ((MainDataStruct.battary_level <= 2400) && ( MainDataStruct.battary_level > 2000))
-    {
-      MainDataStruct.battary_status = LOW;
+      MainDataStruct.battary_status = MID;
     }
     else 
+    {
+      if ((MainDataStruct.battary_level < BAT_MID_LEVEL) && ( MainDataStruct.battary_level >= BAT_LOW_LEVEL + BAT_HESTEREZIS))
       {
-        if (MainDataStruct.battary_level < 2000)
+        MainDataStruct.battary_status = LOW;
+      }
+      else 
+      {
+        if (MainDataStruct.battary_level < BAT_LOW_LEVEL)
         {
-        MainDataStruct.battary_status = CRITICAL;
-    };
-    };
+          MainDataStruct.battary_status = CRITICAL;
+        };
       };
-      };
+    };
+  };
  //------------------------------------------------SENSOR_LEVEL_CONTROL-------------------
       if(!SystemTime.auto_return_in_armed_mode)
       {
