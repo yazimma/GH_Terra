@@ -259,6 +259,6 @@
  void blink(teState_switch st);
  void lcd_clear_all (void);
  void lcd_low_temp(void);
-void lcd_blow(t_motor_DSM sts);
+void lcd_blow(teValveStatus sts);
 
 #endif// __LCD_H__

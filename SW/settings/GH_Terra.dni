@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1354942731
+Checksum=1872128970
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -44,6 +44,11 @@ ActionState=1
 [Trace1]
 Enabled=0
 ShowSource=1
+[BreakpointUsageDialog]
+Placement=_ 670 352 1250 685
+[DataSampleStripe]
+Title0=MainDataStruct.car_level
+Setup0=0 2 0 0 1 0 0 0 65535
 [watch_formats]
 Fmt0={W}0:V90_msb	4	0
 Fmt1={W}0:ind_n	3	0
@@ -54,9 +59,6 @@ LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\Main_DSM.c}.1.1" 0 0 0 0 "" 0 ""
-Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -64,6 +66,10 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\Main_DSM.c}.1.1" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\Main_DSM.c}.155.9" 1 0 0 0 "" 0 ""
+Count=2
 [Aliases]
 Count=0
 SuppressDialog=0

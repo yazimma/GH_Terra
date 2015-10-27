@@ -47,7 +47,10 @@ LCD_ContrastConfig(LCD_Contrast_Level_5);
 
 void lcd_bat_level(teBattaryLevel level)
 {
-  LCD->RAM[0]&=~0x55;
+    c012;
+    c014;
+    c016;
+    c000;
   switch (level)
   {
   case MAX:
@@ -93,15 +96,15 @@ void lcd_bat_level(teBattaryLevel level)
     break;
   }
 };
-void lcd_blow(t_motor_DSM sts)
+void lcd_blow(teValveStatus sts)
 {
   switch(sts)
   {
-      case M_OPEN:
+      case VALVE_ON:
   LCD->RAM[0]|=(1<<4);//LCD->RAM[1]|= (1<<4); 
     break;
     
-  case M_CLOSE:
+  case VALVE_OFF:
    LCD->RAM[0]&=(~(1<<4)); //LCD->RAM[1]&=(~(1<<4));  
     break;
       
