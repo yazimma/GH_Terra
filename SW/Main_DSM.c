@@ -696,7 +696,7 @@ case TERRA_STANDBY:
         if(set_key_counter >= SET_KEY_DELAY)
         {
           MainDataStruct.set_key_pressed = 0;
-          Setup_servise_DSM_status = SETUP_SERVISE_EXIT;
+          Setup_servise_DSM_status = SETUP_PROT_INTERVAL;
           set_key_counter = 0;
           lcd_clear_all();
         };
@@ -707,7 +707,7 @@ case TERRA_STANDBY:
       };
       if (!SystemTime.auto_exit_setup)
       {
-        Setup_servise_DSM_status = SETUP_PROT_INTERVAL;
+        Setup_servise_DSM_status = SETUP_SERVISE_EXIT;
       };  
       
       break;
@@ -734,7 +734,7 @@ case TERRA_STANDBY:
       
       if (old_min_level !=  pre_setup.pre_protect_interval)
       {
-        lcd_data_write(LCD_CAR_LEVEL, pre_setup.pre_protect_interval);
+        lcd_data_write(LCD_MIN_LEVEL, pre_setup.pre_protect_interval);
         old_min_level =  pre_setup.pre_protect_interval;
       };
       if(SET_KEY_PRESSED())

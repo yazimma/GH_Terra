@@ -1,7 +1,7 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 //Power_save_configuration
-//#define SLEEP_MODE_ENABLED
+#define SLEEP_MODE_ENABLED
 //SoftWare_version
 #define SOFT_WERSION 14
 //LOCK       3600 = 1 h

@@ -44,7 +44,7 @@ static uint16_t old_max_level;
 static uint16_t old_min_level;
 uint16_t old_car_level;
 static teBattaryLevel old_battary_status;
-static t_motor_DSM old_valve_status;
+static teValveStatus old_valve_status;
 static teValveStatus old_arm_status; 
 uint16_t blow_count;
 uint16_t valv_count;
@@ -163,7 +163,7 @@ void main(void)
   {
     unlock_eeprom();
     ee_lock_temperature = 18300;
-    ee_zero_level = 2;
+    ee_zero_level = 81;
     ee_max_level = 800;
     ee_min_level = 400;
     ee_watering_protect_interval = WATERING_PROTECT_INTERVAL;
@@ -534,21 +534,21 @@ void LCD_update(void)
       yu=!yu;
       if(yu)
       {
-        lcd_blow(M_CLOSE);
+        lcd_blow(VALVE_OFF);
       }
       else
       {
-        lcd_blow(M_OPEN);        
+        lcd_blow(VALVE_ON);        
       };
     };
   }
   else
   {
     
-  if (old_valve_status != MainDataStruct.valve_state)  //Капля
+  if (old_valve_status != MainDataStruct.valve_status)  //Капля
   {
-   lcd_blow(MainDataStruct.valve_state);
-    old_valve_status = MainDataStruct.valve_state;
+   lcd_blow(MainDataStruct.valve_status);
+    old_valve_status = MainDataStruct.valve_status;
   };
   };
   
