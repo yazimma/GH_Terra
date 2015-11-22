@@ -246,7 +246,7 @@ if (MainDataStruct.ready_to_suspend)
     while (((CLK->SWCR)& 0x01)==0x01);
     CLK_HSICmd(DISABLE);
     __enable_interrupt();
-  go_to_sleap();
+ // go_to_sleap();
 #endif /*SLEEP_MODE_ENABLED*/
   CLK_HSICmd(ENABLE);
   while (((CLK->ICKCR)& 0x02)!=0x02);
@@ -534,11 +534,11 @@ void LCD_update(void)
       yu=!yu;
       if(yu)
       {
-        lcd_blow(VALVE_OFF);
+        lcd_blow(M_CLOSE);
       }
       else
       {
-        lcd_blow(VALVE_ON);        
+        lcd_blow(M_OPEN);        
       };
     };
   }
@@ -547,7 +547,7 @@ void LCD_update(void)
     
   if (old_valve_status != MainDataStruct.valve_status)  //Капля
   {
-   lcd_blow(MainDataStruct.valve_status);
+   lcd_blow(MainDataStruct.valve_state);
     old_valve_status = MainDataStruct.valve_status;
   };
   };

@@ -156,7 +156,7 @@ typedef struct {
   uint32_t watering_protect_interval;
   bool ready_to_suspend;
   t_motor_DSM valve_state;
-  bool valve_command_done;
+  t_motor_DSM valve_pre_state;
   bool valve_error;
   
   enum {

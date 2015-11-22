@@ -96,15 +96,15 @@ void lcd_bat_level(teBattaryLevel level)
     break;
   }
 };
-void lcd_blow(teValveStatus sts)
+void lcd_blow(t_motor_DSM sts)
 {
   switch(sts)
   {
-      case VALVE_ON:
+      case M_OPEN:
   LCD->RAM[0]|=(1<<4);//LCD->RAM[1]|= (1<<4); 
     break;
     
-  case VALVE_OFF:
+  case M_CLOSE:
    LCD->RAM[0]&=(~(1<<4)); //LCD->RAM[1]&=(~(1<<4));  
     break;
       

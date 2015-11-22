@@ -24,7 +24,12 @@ motor_DSM_state = M_READY;
 
 case M_READY:
   
-  if (MainDataStruct.valve_command_done == FALSE)
+//  if(MainDataStruct.valve_state == M_CLOSE && (VALVE_SENSOR_OPEN())) //Иногда система думает что клапан закрыт а он открыт
+//  {                                                                   //непонятно почему. Это костыль для проверки разногласий
+//    motor_DSM_state = M_CLOSE;
+//   };
+  
+  if (MainDataStruct.valve_pre_state != MainDataStruct.valve_state)
   {
     if(MainDataStruct.valve_state == M_CLOSE)
     {
@@ -81,7 +86,7 @@ case GO_TO_CLOSE:
     error_valve_count = 0;
     VALVE_RESET();
     motor_DSM_state = M_READY;
-    MainDataStruct.valve_command_done = TRUE;
+    MainDataStruct.valve_pre_state = M_CLOSE;
   };
   break;
     
@@ -101,7 +106,7 @@ case GO_TO_CLOSE:
     error_valve_count = 0;
     VALVE_RESET();
     motor_DSM_state = M_READY;
-    MainDataStruct.valve_command_done = TRUE;
+    MainDataStruct.valve_pre_state = M_OPEN;
   }; 
   break;
   
