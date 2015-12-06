@@ -234,7 +234,7 @@ void main(void)
         if (MainDataStruct.set_key_pressed) {MainDataStruct.ready_to_suspend = FALSE;};
         if (MainDataStruct.up_key_pressed) {MainDataStruct.ready_to_suspend = FALSE;};
         if (MainDataStruct.down_key_pressed) {MainDataStruct.ready_to_suspend = FALSE;};
-        //if (MainDataStruct.fast_mode) {MainDataStruct.ready_to_suspend = FALSE;};
+        if (MainDataStruct.temporary_manual_mode) {MainDataStruct.ready_to_suspend = FALSE;};
         if (MainDataStruct.battary_level == 0) {MainDataStruct.ready_to_suspend = FALSE;};
         
 if (MainDataStruct.ready_to_suspend)
@@ -246,7 +246,7 @@ if (MainDataStruct.ready_to_suspend)
     while (((CLK->SWCR)& 0x01)==0x01);
     CLK_HSICmd(DISABLE);
     __enable_interrupt();
- // go_to_sleap();
+    go_to_sleap();
 #endif /*SLEEP_MODE_ENABLED*/
   CLK_HSICmd(ENABLE);
   while (((CLK->ICKCR)& 0x02)!=0x02);

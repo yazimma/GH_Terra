@@ -24,10 +24,10 @@ motor_DSM_state = M_READY;
 
 case M_READY:
   
-//  if(MainDataStruct.valve_state == M_CLOSE && (VALVE_SENSOR_OPEN())) //Иногда система думает что клапан закрыт а он открыт
-//  {                                                                   //непонятно почему. Это костыль для проверки разногласий
-//    motor_DSM_state = M_CLOSE;
-//   };
+  if((MainDataStruct.valve_state == M_CLOSE) && (VALVE_SENSOR_OPEN())) //Иногда система думает что клапан закрыт а он открыт
+  {                                                                   //непонятно почему. Это костыль для проверки разногласий
+    motor_DSM_state = M_CLOSE;
+  };
   
   if (MainDataStruct.valve_pre_state != MainDataStruct.valve_state)
   {
