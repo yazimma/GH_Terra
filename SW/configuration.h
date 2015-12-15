@@ -23,7 +23,10 @@
 
 #define AUTO_EXIT_TIMER 30
 #define AUTO_OFF_MANUAL_MODE 3600
-#define TIMEOUT_FOR_RETURN_IN_ARMED_MODE 30
+
+//Таймер возврата в режим автоматического управления после нажатия клавиши
+#define TIMEOUT_FOR_RETURN_IN_ARMED_MODE 15
+
 #define BLOW_COUNT_PERIOD_BLINK 10000
 #define VALV_COUNT_PERIOD_BLINK 5000
 #define LEVEL_LCD_BLINC_PERIOD 4000
@@ -41,6 +44,9 @@
 //---------------------------------KEYS_CONFIG_PARAM----------------------------------------------
 //Шагов до быстрой прокрутки для клавиш вверх/вниз 
 #define STEPS_BEFOR_FAST_STEP 10
+//Шагов в режиме быстрого шага
+#define FAST_STEP_COUNT 20
+
 //Задержка клавиши SET
 #define SET_KEY_DELAY 40000
 #define SET_KEY_DELAY_IN_MENU 5000
@@ -49,7 +55,10 @@
 //Защитный интервал клавиши SET
 #define PROTECT_SET_KEY_DELAY 1000
 #define SERVISE_MENU_DELAY 30000
-#define DELAY_FOR_MANUAL_MODE 1500
+
+//Длительность нажатия клавиши SET для перехода в ручной режим
+#define DELAY_FOR_MANUAL_MODE 2700
+
 //---------------------------------Параметры устанавливаемых значений пользователем---------------
 //Минимальный Гестерезис устанавливаемых значений
 #define HESTIREZIS 10 

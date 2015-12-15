@@ -176,13 +176,23 @@ void main(void)
      ee_sw_lock = UNLOCK;
      
      lock_eeprom();
+     lcd_data_write(LCD_CAR_LEVEL,888);
+     lcd_data_write(LCD_MAX_LEVEL,888);
+     lcd_data_write(LCD_MIN_LEVEL,888);
+     blink(ON);
+     for(uint16_t y=0;y<30000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};}; 
+     lcd_data_write(LCD_CAR_LEVEL,SOFT_WERSION);
+     for(uint16_t y=0;y<30000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};}; 
+     blink(OFF);
+     old_car_level = 333;
+     /*
      for (int sw = 0; sw != SOFT_WERSION;sw++)
      {
        lcd_data_write(LCD_CAR_LEVEL,sw);
        for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};};        
      };
       for(uint16_t y=0;y<30000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};}; 
-           
+     */
   };
   
   //Загрузим из EEPROM данные
@@ -384,7 +394,7 @@ uint16_t level_lcd_blinc_count;
 void LCD_update(void)
 { 
   
-  if((Main_DSM_status == TERRA_SETUP) && ((Setup_DSM_status == SETUP_MAX_LEVEL)|(Setup_DSM_status == SETUP_TO_MANUAL)))
+  if((Main_DSM_status == TERRA_SETUP) && ((Setup_DSM_status == SETUP_MAX_LEVEL)))//|(Setup_DSM_status == SETUP_TO_MANUAL)))
     {
       level_lcd_blinc_count ++;
       if(level_lcd_blinc_count >= LEVEL_LCD_BLINC_PERIOD)
@@ -406,7 +416,7 @@ void LCD_update(void)
     MainDataStruct.max_level_lcd_on = 1;
   };
   //************************************************************************************
-  if((Main_DSM_status == TERRA_SETUP) && ((Setup_DSM_status == SETUP_MIN_LEVEL)|(Setup_DSM_status == SETUP_TO_MANUAL))) //В режиме установки мигаем через жо.у
+  if((Main_DSM_status == TERRA_SETUP) && ((Setup_DSM_status == SETUP_MIN_LEVEL)))//|(Setup_DSM_status == SETUP_TO_MANUAL))) //В режиме установки мигаем через жо.у
     {
       level_lcd_blinc_count ++;
       if(level_lcd_blinc_count >= LEVEL_LCD_BLINC_PERIOD)

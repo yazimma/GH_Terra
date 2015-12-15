@@ -376,9 +376,9 @@ case TERRA_STANDBY:
           }
           else
           {
-            if ((( MainDataStruct.max_level-10) > MainDataStruct.min_level) && (!(( MainDataStruct.max_level-10) > 1000))) 
+            if ((( MainDataStruct.max_level-FAST_STEP_COUNT) > MainDataStruct.min_level) && (!(( MainDataStruct.max_level-FAST_STEP_COUNT) > 1000))) 
             {
-              MainDataStruct.max_level-=10;
+              MainDataStruct.max_level-=FAST_STEP_COUNT;
             };
           };
         };
@@ -405,9 +405,9 @@ case TERRA_STANDBY:
           }
           else
           {
-            if ((MainDataStruct.max_level +10) < 999)
+            if ((MainDataStruct.max_level +FAST_STEP_COUNT) < 999)
             {
-              MainDataStruct.max_level+=10; 
+              MainDataStruct.max_level+=FAST_STEP_COUNT; 
             };
           };
       };
@@ -468,9 +468,9 @@ case TERRA_STANDBY:
           }
           else
           {
-            if ( ((MainDataStruct.min_level-10) > 0) && (!((MainDataStruct.min_level-10) > 1000))) //Проверим что не выходим за пределы unsigned int
+            if ( ((MainDataStruct.min_level-FAST_STEP_COUNT) > 0) && (!((MainDataStruct.min_level-FAST_STEP_COUNT) > 1000))) //Проверим что не выходим за пределы unsigned int
             {
-              MainDataStruct.min_level-=10;
+              MainDataStruct.min_level-=FAST_STEP_COUNT;
             };
           };
         };
@@ -493,9 +493,9 @@ case TERRA_STANDBY:
         }
         else 
         {
-          if((MainDataStruct.min_level + 10) < MainDataStruct.max_level)
+          if((MainDataStruct.min_level + FAST_STEP_COUNT) < MainDataStruct.max_level)
           {
-            MainDataStruct.min_level+=10;
+            MainDataStruct.min_level+=FAST_STEP_COUNT;
           };
         };
           
