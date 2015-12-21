@@ -50,7 +50,9 @@ case M_CLOSE:
   
   GPIO_WriteBit(GPIOC, GPIO_Pin_4,SET);
   for(uint16_t to=0;to<8000;to++){for(uint16_t w=0;w<90;w++){asm("NOP");};};
-  VALVE_CLOSE();
+  
+    VALVE_CLOSE();
+
   motor_DSM_state = GO_TO_CLOSE;
   
   
@@ -61,7 +63,9 @@ break;
 case M_OPEN:
   GPIO_WriteBit(GPIOC, GPIO_Pin_4,SET);
   for(uint16_t y=0;y<8000;y++){for(uint16_t w=0;w<90;w++){asm("NOP");};};
-  VALVE_CLOSE();
+  
+    VALVE_CLOSE();
+ 
   motor_DSM_state = GO_TO_OPEN; 
   
   

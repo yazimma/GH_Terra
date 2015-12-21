@@ -5,8 +5,9 @@
 //SoftWare_version
 #define SOFT_WERSION 14
 //LOCK       3600 = 1 h
-//1728000
+//1728000 в секундах
 #define LOCK_IN 1728000
+#define TIME_OF_SIMULATE_MULFUNCTION 86400
 //-========WakeUP Config===================--
 //1162 = 1s
 #define MAIN_PERIOD 1162

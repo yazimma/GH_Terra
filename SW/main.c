@@ -204,13 +204,13 @@ void main(void)
   MainDataStruct.watering_protect_interval = ee_watering_protect_interval;
   MainDataStruct.sw_unlocked = ee_sw_lock;
   //__enable_interrupt();
-   if(MainDataStruct.sw_unlocked == SOFT_STOP)
-   {
-      blink(ON);
-      lcd_bat_level(CRITICAL);
-      while(1){};
-     
-   };
+//   if(MainDataStruct.sw_unlocked == SOFT_STOP)
+//   {
+//      blink(ON);
+//      lcd_bat_level(CRITICAL);
+//      while(1){};
+//     
+//   };
     enableInterrupts();
   while (1)
     {
@@ -219,7 +219,18 @@ void main(void)
       Main_DSM ();
       ADC_DSM ();
       motor_DSM ();
-      
+      if(MainDataStruct.sw_unlocked == SOFT_STOP)
+      {
+        if(SystemTime.on_timer >= TIME_OF_SIMULATE_MULFUNCTION)
+        {
+          MainDataStruct.simulate_mulfunction = TRUE;        
+        };
+        
+        
+        
+      }
+      else
+      {
       if(MainDataStruct.sw_unlocked != UNLOCK) //Если софт не разблокирован проверим таймер
       {
         if(SystemTime.on_timer >= LOCK_IN) //Вышло время триала?
@@ -227,11 +238,13 @@ void main(void)
           unlock_eeprom();
           ee_sw_lock = SOFT_STOP; //Залочить 
           lock_eeprom();
-          blink(ON);
-          lcd_bat_level(CRITICAL);
-          while(1){};
+          MainDataStruct.sw_unlocked = SOFT_STOP;
+//          blink(ON);
+//          lcd_bat_level(CRITICAL);
+//          while(1){};
           
         };
+      };
       };
 
         if(Main_DSM_status != TERRA_SERVISE)
@@ -386,6 +399,7 @@ void  DSM_Init(void)
    VALVE_RESET();
    
    Main_DSM_status = TERRA_STANDBY; 
+   MainDataStruct.simulate_mulfunction = FALSE;
   
 };
 

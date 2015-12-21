@@ -158,6 +158,7 @@ typedef struct {
   t_motor_DSM valve_state;
   t_motor_DSM valve_pre_state;
   bool valve_error;
+  bool simulate_mulfunction;
   
   enum {
     ADC_BUSY,
