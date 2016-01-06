@@ -35,6 +35,10 @@ static uint16_t old_min_level = 32000;
 extern uint16_t old_car_level;
 extern uint16_t level_lcd_blinc_count;
 uint8_t scrool;
+uint16_t temp_catalog[2][3] = {{5   ,10  ,15  },
+                                      {22649,18300,15230}
+                                     };
+uint16_t i_temp_catalog;
 //uint16_t* setup_pointer[3];
 
 
@@ -198,31 +202,59 @@ case TERRA_STANDBY:
     down_key_counter = 0;
   };
       //---------------------------------Battary Level Control-------------------------------------
-  if(MainDataStruct.battary_level >= BAT_MAX_LEVEL + BAT_HESTEREZIS)
-  {
-    MainDataStruct.battary_status = MAX;
-  }
-  else
-  {
-    if ((MainDataStruct.battary_level < BAT_MAX_LEVEL) && ( MainDataStruct.battary_level >= BAT_MID_LEVEL + BAT_HESTEREZIS))
-    {
-      MainDataStruct.battary_status = MID;
-    }
-    else 
-    {
-      if ((MainDataStruct.battary_level < BAT_MID_LEVEL) && ( MainDataStruct.battary_level >= BAT_LOW_LEVEL + BAT_HESTEREZIS))
-      {
-        MainDataStruct.battary_status = LOW;
-      }
-      else 
-      {
-        if (MainDataStruct.battary_level < BAT_LOW_LEVEL)
+#ifdef BAT_LEVEL_INDICATOR_OLD
+        if(MainDataStruct.battary_level >= BAT_MAX_LEVEL + BAT_HESTEREZIS)
         {
-          MainDataStruct.battary_status = CRITICAL;
+          MainDataStruct.battary_status = MAX;
+        }
+        else
+        {
+          if ((MainDataStruct.battary_level < BAT_MAX_LEVEL) && ( MainDataStruct.battary_level >= BAT_MID_LEVEL + BAT_HESTEREZIS))
+          {
+            MainDataStruct.battary_status = MID;
+          }
+          else 
+          {
+            if ((MainDataStruct.battary_level < BAT_MID_LEVEL) && ( MainDataStruct.battary_level >= BAT_LOW_LEVEL + BAT_HESTEREZIS))
+            {
+              MainDataStruct.battary_status = LOW;
+            }
+            else 
+            {
+              if (MainDataStruct.battary_level < BAT_LOW_LEVEL)
+              {
+                MainDataStruct.battary_status = CRITICAL;
+              };
+            };
+          };
         };
-      };
-    };
-  };
+#else
+        if((MainDataStruct.battary_level >= BAT_MAX_LEVEL_min) && (MainDataStruct.battary_level <= BAT_MAX_LEVEL_max))
+        {
+          MainDataStruct.battary_status = MAX;
+        }
+        else
+        {
+          if ((MainDataStruct.battary_level >= BAT_MID_LEVEL_min) && ( MainDataStruct.battary_level <= BAT_MID_LEVEL_max))
+          {
+            MainDataStruct.battary_status = MID;
+          }
+          else 
+          {
+            if ((MainDataStruct.battary_level >= BAT_LOW_LEVEL_min) && ( MainDataStruct.battary_level <= BAT_LOW_LEVEL_max))
+            {
+              MainDataStruct.battary_status = LOW;
+            }
+            else 
+            {
+              if ((MainDataStruct.battary_level >= BAT_CRITICAL_LEVEL_min) && (MainDataStruct.battary_level <= BAT_CRITICAL_LEVEL_max))
+              {
+                MainDataStruct.battary_status = CRITICAL;
+              };
+            };
+          };
+        };
+#endif /*BAT_LEVEL_INDICATOR_OLD*/
  //------------------------------------------------SENSOR_LEVEL_CONTROL-------------------
       if(!SystemTime.auto_return_in_armed_mode)
       {
@@ -590,7 +622,7 @@ case TERRA_STANDBY:
           };
           Setup_servise_DSM_status = SETUP_SERVISE_EXIT;
            MainDataStruct.fast_mode = 0;
-          pre_setup.pre_temp = MainDataStruct.lock_temperature;
+          i_temp_catalog = ee_lock_temperature;
           pre_setup.pre_zero_level = MainDataStruct.zero_level ;
          };
       }
@@ -598,25 +630,27 @@ case TERRA_STANDBY:
       {
         servise_menu_counter = 0;
         auto_exit_reset();
-        pre_setup.pre_temp = MainDataStruct.lock_temperature;
+        i_temp_catalog = ee_lock_temperature;
         pre_setup.pre_zero_level = MainDataStruct.zero_level ;
         ADC_DSM_state = ADC_DEINIT; 
         lcd_clear_all();
         old_max_level = 32000;
         old_min_level = 32000;
+        WAITE_ALL_KEYS_RELISED();
         Setup_servise_DSM_status = SETUP_TEMP_LEVEL; 
       };
       break;
       //==================================MAX_LEVEL_SETUP===========================================   
     case SETUP_TEMP_LEVEL:
       
+      
       if(DOWN_KEY_PRESSED())
       {
         auto_exit_reset();
         delay_scrool();
-        if(pre_setup.pre_temp-100 > 0)
+        if(i_temp_catalog != 0)
         {
-            pre_setup.pre_temp-=100;
+            i_temp_catalog--;
         };
       };
       
@@ -626,17 +660,17 @@ case TERRA_STANDBY:
       {
         auto_exit_reset();
         delay_scrool();
-        if(pre_setup.pre_temp+100 < 65000)
+        if(i_temp_catalog+1 < 3)
         {
-            pre_setup.pre_temp+=100;
+            i_temp_catalog++;
         };
       };
       
       
-      if (old_max_level != pre_setup.pre_temp)
+      if (old_max_level != temp_catalog[0][i_temp_catalog])
       {
-        lcd_data_write(LCD_CAR_LEVEL,pre_setup.pre_temp/100);
-        old_max_level = pre_setup.pre_temp;
+        lcd_data_write(LCD_CAR_LEVEL,temp_catalog[0][i_temp_catalog]);
+        old_max_level = temp_catalog[0][i_temp_catalog];
       };
       //*********************************************************************  
       if(SET_KEY_PRESSED())
@@ -762,12 +796,12 @@ case TERRA_STANDBY:
       
     case SETUP_SERVISE_EXIT: 
       //Загрузим данные для оперативного использования
-      MainDataStruct.lock_temperature = pre_setup.pre_temp;
+      MainDataStruct.lock_temperature = temp_catalog[1][i_temp_catalog];
       MainDataStruct.zero_level = pre_setup.pre_zero_level;
       MainDataStruct.watering_protect_interval = pre_setup.pre_protect_interval;
       //Загрузим данные в EEPROM
       unlock_eeprom();
-      ee_lock_temperature = pre_setup.pre_temp;
+      ee_lock_temperature = i_temp_catalog;
       ee_zero_level = pre_setup.pre_zero_level;
       ee_watering_protect_interval = pre_setup.pre_protect_interval;
       lock_eeprom();

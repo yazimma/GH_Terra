@@ -5,6 +5,7 @@
 #define SET_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_3)
 #define UP_KEY_PRESSED()  !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1)
 #define DOWN_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_2)
+#define WAITE_ALL_KEYS_RELISED() if(DOWN_KEY_PRESSED() || UP_KEY_PRESSED()){break;}
 #define VALVE_KEY_PRESSED() !GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_6)
 #define M_POWER_ON()  GPIO_WriteBit(GPIOD, GPIO_Pin_7,SET);
 #define M_POWER_OFF() GPIO_WriteBit(GPIOD, GPIO_Pin_7,RESET);
@@ -95,6 +96,7 @@ typedef enum {
   GO_TO_CLOSE,
   GO_TO_OPEN,
   M_READY,
+  M_TEST,
   
 }t_motor_DSM;
 

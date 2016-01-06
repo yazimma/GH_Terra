@@ -39,6 +39,7 @@ extern tStateMashine_status Setup_DSM_status;
 extern tsSystemTime SystemTime;
 extern uint8_t scrool;
 extern t_motor_DSM motor_DSM_state;
+extern uint16_t temp_catalog[2][3];
 _Bool u = FALSE;
 static uint16_t old_max_level;
 static uint16_t old_min_level;
@@ -49,9 +50,11 @@ static teValveStatus old_arm_status;
 uint16_t blow_count;
 uint16_t valv_count;
 uint16_t bat_crit_count;
+uint16_t interval_in_low_temp_mode;
 bool Go = FALSE;
 _Bool yu = TRUE;
 _Bool bat_critical_blink = FALSE;
+_Bool in_low_temp_indicator = FALSE;
 //---------------------------------Прототипы функций----------------------------------------------
 void clock_init (void);
 void IO_init(void);
@@ -159,10 +162,10 @@ void main(void)
   DSM_Init();
   system_timer_init();
   //------------------LOAD_FROM_EEPROM---------------------
-  if ( ee_lock_temperature == 0) //Если в EEPROM ничего нет то запишем установки по умолчанию
+  if ( ee_max_level == 0) //Если в EEPROM ничего нет то запишем установки по умолчанию
   {
     unlock_eeprom();
-    ee_lock_temperature = 18300;
+    ee_lock_temperature = 1;
     ee_zero_level = 81;
     ee_max_level = 800;
     ee_min_level = 400;
@@ -196,7 +199,7 @@ void main(void)
   };
   
   //Загрузим из EEPROM данные
-  MainDataStruct.lock_temperature = ee_lock_temperature;
+  MainDataStruct.lock_temperature = temp_catalog[1][ee_lock_temperature];
   MainDataStruct.zero_level = ee_zero_level;
   MainDataStruct.max_level = ee_max_level;
   MainDataStruct.min_level = ee_min_level;
@@ -350,8 +353,8 @@ void  DSM_Init(void)
   motor_DSM_state = MOTOR_NO_INIT;
   MainDataStruct.car_level = 0;
   MainDataStruct.valve_error = FALSE;
-  MainDataStruct.battary_level = 0;
-   lcd_bat_level(CRITICAL);
+  MainDataStruct.battary_level = 3000;
+   lcd_bat_level(MAX);
   for(uint16_t l=0;l<TEST_DISPLAY_DELAY;l++){asm("NOP");};
   lcd_bat_level(LOW);
   for(uint16_t l=0;l<TEST_DISPLAY_DELAY;l++){asm("NOP");};
@@ -486,20 +489,54 @@ void LCD_update(void)
     old_min_level = 32000;
   };
   
-
-
-  if (old_car_level != MainDataStruct.car_level)
+  if (MainDataStruct.armed != LOW_TEMP)
   {
-    if(MainDataStruct.armed != LOW_TEMP)
+    if (old_car_level != MainDataStruct.car_level)
     {
       lcd_data_write(LCD_CAR_LEVEL,MainDataStruct.car_level);
       old_car_level = MainDataStruct.car_level;
-    }
-    else
-    {
-      lcd_low_temp();
     };
   };
+//  else
+//  {
+//    
+//    if (in_low_temp_indicator)
+//    {
+//      if(interval_in_low_temp_mode ==0) //Чтобы не мерцало сообщение Low
+//      {
+//        lcd_low_temp();
+//      };
+//      if(interval_in_low_temp_mode > INTERVAL_IN_LOW_TEMP_MODE)
+//      {
+//        in_low_temp_indicator = !in_low_temp_indicator;
+//        old_car_level = 32000;
+//        interval_in_low_temp_mode = 0;
+//      }
+//      else
+//      {
+//        interval_in_low_temp_mode++;
+//      };
+//    }
+//    else
+//    {
+//      if (old_car_level != MainDataStruct.car_level)
+//      {
+//        lcd_data_write(LCD_CAR_LEVEL,MainDataStruct.car_level);
+//        old_car_level = MainDataStruct.car_level;
+//      };
+//      if(interval_in_low_temp_mode > INTERVAL_IN_LOW_TEMP_MODE)
+//      {
+//        in_low_temp_indicator = !in_low_temp_indicator;
+//        interval_in_low_temp_mode = 0;
+//      }
+//      else
+//      {
+//        interval_in_low_temp_mode++;
+//      }; 
+//    };
+//    
+//  };
+  
   
   
   if (old_battary_status != MainDataStruct.battary_status)

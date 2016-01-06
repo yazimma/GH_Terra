@@ -1,5 +1,8 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
+//Процедура обработки данных о батарее
+//BAT_LEVEL_INDICATOR_OLD - Мой вариант
+//#define BAT_LEVEL_INDICATOR_OLD
 //Power_save_configuration
 #define SLEEP_MODE_ENABLED
 //SoftWare_version
@@ -34,14 +37,18 @@
 
 
 //Температура блокировки в сопротивлении термистора на температурах
-//18300 = 10 C ; 12161 = 20; 22649 = 5; 28222 = 0;
+//18300 = 10 C ; 12161 = 20; 22649 = 5; 28222 = 0;15=15230
 #define LOCK_TEMPERATURE 18300
+//Период мигания данных ва режиме низкой температуры
+#define INTERVAL_IN_LOW_TEMP_MODE 1
 //Защитный интервал полива по умолчанию hours
 #define WATERING_PROTECT_INTERVAL 1
 //Время после нажатия клавиши до включения защитного интервала sec
 #define NO_PRESSED_KEY_PROTECT_INTERVAL_VALID 600
-//циклов работы мотора до включения индикатора ошибки клапана
+//циклов работы мотора до включения индикатора ошибки клапана в рабочем порядке
 #define ERROR_VALVE_PERIOD_COUNT 100000
+//Циклов работы клапана до включения ошибки при стартовом тестировании
+#define ERROR_VALVE_PERIOD_COUNT_START_TEST 10000000
 //---------------------------------KEYS_CONFIG_PARAM----------------------------------------------
 //Шагов до быстрой прокрутки для клавиш вверх/вниз 
 #define STEPS_BEFOR_FAST_STEP 10
@@ -70,10 +77,26 @@
 //240 Минимальный перекос моста из-за неточности резисторов и супрессоров на выходе измерителя. 
 #define ZERO_LEVEL 240
 //==============================Уровни заряда батареи=========================================
-#define BAT_MAX_LEVEL 2700
-#define BAT_MID_LEVEL 2400
-#define BAT_LOW_LEVEL 2000
+#ifdef BAT_LEVEL_INDICATOR_OLD
+
+      #define BAT_MAX_LEVEL 2700
+      #define BAT_MID_LEVEL 2400
+      #define BAT_LOW_LEVEL 2000
+      #define BAT_HESTEREZIS 100
+#else
+      #define BAT_MAX_LEVEL_max 4000
+      #define BAT_MAX_LEVEL_min 2801
+
+      #define BAT_MID_LEVEL_max 2800
+      #define BAT_MID_LEVEL_min 2501
+
+      #define BAT_LOW_LEVEL_max 2500
+      #define BAT_LOW_LEVEL_min 2201
+
+      #define BAT_CRITICAL_LEVEL_max 2200
+      #define BAT_CRITICAL_LEVEL_min 1500
+#endif /*BAT_LEVEL_INDICATOR_OLD*/
+
 #define BATTARY_CRIT_BLINK_PERIOD 20000
-#define BAT_HESTEREZIS 100
 
 #endif //__CONFIG_H__

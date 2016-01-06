@@ -15,13 +15,57 @@ void motor_DSM (void)
 {
 switch(motor_DSM_state)
 {
-  case MOTOR_NO_INIT:
-
-motor_DSM_state = M_READY;
-
-
+  
+case MOTOR_NO_INIT:
+  motor_DSM_state = M_TEST;
   break;
-
+  
+case M_TEST:
+  GPIO_WriteBit(GPIOC, GPIO_Pin_4,SET);
+  for(uint16_t to=0;to<8000;to++){for(uint16_t w=0;w<90;w++){asm("NOP");};};
+  
+  VALVE_CLOSE();
+  
+  if(VALVE_SENSOR_CLOSE())
+  {
+    error_valve_count = 0;
+    do
+    {
+      if (error_valve_count >= ERROR_VALVE_PERIOD_COUNT_START_TEST)
+        {
+          MainDataStruct.valve_error = TRUE;
+          VALVE_RESET();
+        }
+      else
+      {
+        error_valve_count++;
+      };
+    }while (VALVE_SENSOR_CLOSE());
+    error_valve_count = 0;
+    
+    
+  }
+  else
+  {
+    error_valve_count = 0;
+    do
+    {
+      if (error_valve_count >= ERROR_VALVE_PERIOD_COUNT_START_TEST)
+        {
+          MainDataStruct.valve_error = TRUE;
+          VALVE_RESET();
+        }
+      else
+      {
+        error_valve_count++;
+      };
+    }while (VALVE_SENSOR_OPEN());
+    error_valve_count = 0;
+  };
+  VALVE_RESET();
+  motor_DSM_state = M_READY;
+  break;
+  
 case M_READY:
   
   if((MainDataStruct.valve_state == M_CLOSE) && (VALVE_SENSOR_OPEN())) //Иногда система думает что клапан закрыт а он открыт
