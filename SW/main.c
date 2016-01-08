@@ -40,6 +40,7 @@ extern tsSystemTime SystemTime;
 extern uint8_t scrool;
 extern t_motor_DSM motor_DSM_state;
 extern uint16_t temp_catalog[2][3];
+extern uint32_t protect_interval_catalog [2][5];
 _Bool u = FALSE;
 static uint16_t old_max_level;
 static uint16_t old_min_level;
@@ -204,7 +205,7 @@ void main(void)
   MainDataStruct.max_level = ee_max_level;
   MainDataStruct.min_level = ee_min_level;
   MainDataStruct.ready_to_suspend = FALSE;
-  MainDataStruct.watering_protect_interval = ee_watering_protect_interval;
+  MainDataStruct.watering_protect_interval = protect_interval_catalog[1][ee_watering_protect_interval];
   MainDataStruct.sw_unlocked = ee_sw_lock;
   //__enable_interrupt();
 //   if(MainDataStruct.sw_unlocked == SOFT_STOP)

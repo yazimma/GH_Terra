@@ -52,7 +52,7 @@ if(Main_DSM_status != TERRA_SETUP) //Если не находимся в режиме установки
     };
     if(!SystemTime.sensor_get_time)//Если пришло время для измерения влажности
     {
-      if(!MainDataStruct.exe_mode) //Перенастройка времени измерения влажности для режима выстовка
+      if(!MainDataStruct.exe_mode) //Перенастройка времени измерения влажности для режима выставка
       {
         if(!MainDataStruct.fast_mode)//Режим быстрых измерений после нажатия на кнопку. 
         {
@@ -105,10 +105,10 @@ if( SystemTime.sensor_get_time == SystemTime.adc_get_time)   //Чтобы не совпадал
   SystemTime.sensor_get_time+=2;
   SystemTime.adc_get_time+=4;
 };
-
+ //Индикатор в режиме низкой температуры
  if (MainDataStruct.armed != LOW_TEMP)
   {
-    
+     asm("NOP");
   }
   else
   {
@@ -149,7 +149,7 @@ if( SystemTime.sensor_get_time == SystemTime.adc_get_time)   //Чтобы не совпадал
     };
     
   };
-
+//END_OF_Индикатор в режиме низкой температуры
 
 //Счетчик времени от последней нажатой клавиши
 SystemTime.key_no_pressed_time++;

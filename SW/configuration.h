@@ -49,6 +49,10 @@
 #define ERROR_VALVE_PERIOD_COUNT 100000
 //Циклов работы клапана до включения ошибки при стартовом тестировании
 #define ERROR_VALVE_PERIOD_COUNT_START_TEST 10000000
+
+//Период мигания в режиме сервисного меню
+#define BLINK_IN_SERVISE 10000
+
 //---------------------------------KEYS_CONFIG_PARAM----------------------------------------------
 //Шагов до быстрой прокрутки для клавиш вверх/вниз 
 #define STEPS_BEFOR_FAST_STEP 10
@@ -62,7 +66,7 @@
 #define VALVE_KEY_DELAY 30000
 //Защитный интервал клавиши SET
 #define PROTECT_SET_KEY_DELAY 1000
-#define SERVISE_MENU_DELAY 30000
+#define SERVISE_MENU_DELAY 1500
 
 //Длительность нажатия клавиши SET для перехода в ручной режим
 #define DELAY_FOR_MANUAL_MODE 2700

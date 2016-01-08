@@ -86,6 +86,7 @@ INIT,
   SETUP_PROT_INTERVAL,
   SETUP_SERVISE_EXIT,
   SETUP_TO_MANUAL,
+  SETUP_TO_SERVISE,
 }tStateMashine_status;
 
 typedef enum {
