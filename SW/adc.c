@@ -49,6 +49,7 @@ uint32_t Vrefint;
 float CalibT;
 uint8_t vref_fact@0x04910;
 uint8_t V90_Call@0x04911;
+uint16_t V90_msb;
 float calc;
 bool i=FALSE;
 //---------------------------------------------------------------------------------------
@@ -119,10 +120,11 @@ INTERRUPT_HANDLER(ADC1_COMP_IRQHandler, 18)
       
         pre_temperature = akkum;
         pre_temperature*= MainDataStruct.battary_level; //
-        pre_temperature /=4096;
-        calc = MainDataStruct.battary_level -  pre_temperature;
-        calc/=10000;
-        MainDataStruct.temperature = (uint16_t)(pre_temperature / calc); 
+        pre_temperature /=4096ul;
+        MainDataStruct.temperature =(int16_t) (90-((CalibT - pre_temperature)/1.62));
+//        calc = MainDataStruct.battary_level -  pre_temperature;
+//        calc/=10000;
+//        MainDataStruct.temperature = (uint16_t)(pre_temperature / calc); 
         
         //pre_temp_float =  pre_temperature / CalibT;
 //        pre_temperature/=CalibT;
@@ -218,8 +220,9 @@ void ADC_DSM (void)
   case RE_INIT_FOR_TEMP_MEASURE:          
     chanel = TEMPERATURE;  
     //Проверяем канал температуры
-//    V90_msb |= V90_Call;  //Получим откалиброванное значение из памяти.
-//    CalibT = (V90_msb*3000ul)/4096; //Вычислим напряжение откалиброванное при 90 градусах референс равен 3000мв из даташита
+    V90_msb = 0x03 <<8;
+    V90_msb |= V90_Call;  //Получим откалиброванное значение из памяти.
+    CalibT = (V90_msb*2940ul)/4096ul; //Вычислим напряжение откалиброванное при 90 градусах референс равен 3000мв из даташита
 //    CalibT/= 363;
     conversion_samples = 4;
     ADC_VrefintCmd(DISABLE);
@@ -230,14 +233,14 @@ void ADC_DSM (void)
              ADC_Prescaler_1);
     ADC_SamplingTimeConfig(ADC1,                          //Сэмплирование в 4 цыкла АЦП
                            ADC_Group_SlowChannels,
-                           ADC_SamplingTime_4Cycles);
+                           ADC_SamplingTime_192Cycles);
     
     GPIO_WriteBit(GPIOC, GPIO_Pin_0, SET);
-    //ADC_TempSensorCmd(ENABLE);
+   ADC_TempSensorCmd(ENABLE);
    // ADC_VrefintCmd(ENABLE);
     ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
     ADC_ChannelCmd(ADC1,ADC_Channel_Vrefint, DISABLE);
-    ADC_ChannelCmd(ADC1,ADC_Channel_24, ENABLE);  //  ADC_Channel_TempSensor
+    ADC_ChannelCmd(ADC1,ADC_Channel_TempSensor, ENABLE);  //  ADC_Channel_TempSensor
     ADC_Cmd(ADC1,ENABLE);
     for(int y=0;y<30000;y++){asm("NOP");};
     
@@ -257,6 +260,9 @@ void ADC_DSM (void)
     ADC_DeInit(ADC1);
     //TIM1_DeInit();
     ADC_VrefintCmd(DISABLE);
+    ADC_TempSensorCmd(DISABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_Vrefint, DISABLE);
+    ADC_ChannelCmd(ADC1,ADC_Channel_TempSensor, DISABLE);
     GPIO_WriteBit(GPIOC, GPIO_Pin_0, RESET);
     M_POWER_OFF();
      CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,DISABLE); //Включим тактирование АЦП

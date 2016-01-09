@@ -151,7 +151,7 @@ typedef struct {
   soft_lock_t sw_unlocked;
   teValveStatus armed;
   teBattaryLevel battary_status;
-  int16_t temperature;
+  uint16_t temperature;
   uint16_t lock_temperature;
   uint16_t battary_level;
   uint16_t sensor;

@@ -37,7 +37,7 @@ extern uint16_t level_lcd_blinc_count;
 uint8_t scrool;
 uint16_t temp_catalog[2][3] = {
   {5    ,10   ,15   },
-  {22649,18300,15230}
+  {5,10,15}
 };
 uint32_t protect_interval_catalog [2][5] = {
   {0,1   ,4    ,12   ,24   },
@@ -295,7 +295,7 @@ tErr Main_DSM (void)
     //=============================================================================================
     //----------------------------------------------TEMPERATURE_LOCK-----------------------------------
     // Не забыть что NTC резистор !!!!
-    if(MainDataStruct.temperature > MainDataStruct.lock_temperature)
+    if(MainDataStruct.temperature < MainDataStruct.lock_temperature)
     {
       if (MainDataStruct.armed != LOW_TEMP)
       {
