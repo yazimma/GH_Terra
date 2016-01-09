@@ -232,7 +232,7 @@ void ADC_DSM (void)
                            ADC_Group_SlowChannels,
                            ADC_SamplingTime_4Cycles);
     
-    //GPIO_WriteBit(GPIOF, GPIO_Pin_0, SET);
+    GPIO_WriteBit(GPIOC, GPIO_Pin_0, SET);
     //ADC_TempSensorCmd(ENABLE);
    // ADC_VrefintCmd(ENABLE);
     ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
@@ -257,7 +257,7 @@ void ADC_DSM (void)
     ADC_DeInit(ADC1);
     //TIM1_DeInit();
     ADC_VrefintCmd(DISABLE);
-    GPIO_WriteBit(GPIOF, GPIO_Pin_0, RESET);
+    GPIO_WriteBit(GPIOC, GPIO_Pin_0, RESET);
     M_POWER_OFF();
      CLK_PeripheralClockConfig(CLK_Peripheral_ADC1,DISABLE); //Включим тактирование АЦП
     ADC_DSM_state = READY_TO_SUSPEND;
