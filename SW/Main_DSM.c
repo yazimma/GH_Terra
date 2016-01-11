@@ -307,11 +307,13 @@ tErr Main_DSM (void)
     }
     else 
     {
-      if (MainDataStruct.armed == LOW_TEMP)
+      if(MainDataStruct.temperature >= MainDataStruct.lock_temperature+1) //Добавим гесттерезис в блокировку по температуре
       {
-        
-        MainDataStruct.armed = save_pre_status;
-        old_car_level = 32000;
+        if (MainDataStruct.armed == LOW_TEMP)
+        {
+          MainDataStruct.armed = save_pre_status;
+          old_car_level = 32000;
+        };
       };
     };
     //======================FAST_MODE_CONTROL==================================
